@@ -7,7 +7,7 @@ public class AllCars {
     }
     public boolean addCar(Car car) {
         for(Car c : allCars) {
-            if(c.equals(car)) {
+            if(c.equals(car)||c.getPlate().equals(car.getPlate())||c.getId().equals(car.getId())) {
                 return false;
             }
         }

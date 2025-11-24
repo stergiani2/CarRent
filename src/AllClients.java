@@ -7,8 +7,7 @@ public class AllClients {
     }
     public boolean addClient(Client client) {
         for (Client c : clients) {
-            if(client.equals(c)) {
-                return false;
+            if(client.equals(c)||c.getAFM().equals(client.getAFM())) {               return false;
             }
         }
         clients.add(client);
