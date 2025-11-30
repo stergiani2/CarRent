@@ -1,3 +1,7 @@
+package api.services;
+
+import api.model.Car;
+
 import java.util.ArrayList;
 
 public class AllCars {

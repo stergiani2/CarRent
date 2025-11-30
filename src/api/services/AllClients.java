@@ -1,17 +1,18 @@
-import java.util.ArrayList;
+package api.services;
+
+import api.model.Client;
+
+import java.util.HashSet;
+import java.util.Objects;
+
 
 public class AllClients {
-    ArrayList<Client> clients;
+    HashSet<Client> clients;
     public AllClients() {
-        clients = new ArrayList<>();
+        clients = new HashSet<>();
     }
     public boolean addClient(Client client) {
-        for (Client c : clients) {
-            if(client.equals(c)||c.getAFM().equals(client.getAFM())) {               return false;
-            }
-        }
-        clients.add(client);
-        return true;
+        return clients.add(client);
     }
     public Client searchClientByAFM(String AFM) {
         for (Client c : clients) {
@@ -21,8 +22,8 @@ public class AllClients {
         }
         return null;
     }
-    public ArrayList<Client> searchByName(String firstName, String lastName) {
-        ArrayList<Client> clientsByName = new ArrayList<>();
+    public HashSet<Client> searchByName(String firstName, String lastName) {
+        HashSet<Client> clientsByName = new HashSet<>();
         for (Client c : clients) {
             if(firstName.equals(c.getFirst_name()) && lastName.equals(c.getLast_name())) {
                 clientsByName.add(c);
@@ -38,4 +39,5 @@ public class AllClients {
         }
         return null;
     }
+
 }
