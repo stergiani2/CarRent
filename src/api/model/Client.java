@@ -1,5 +1,4 @@
 package api.model;
-
 import java.util.Objects;
 
 /**
@@ -117,7 +116,7 @@ public class Client {
         if(this == o) {
             return true;
         }
-        if(o==null||getClass()!=o.getClass()) {
+        if(!(o instanceof Client)) {
             return false;
         }
         Client c=(Client)o;

@@ -1,10 +1,14 @@
 package api.model;
+
+import java.util.Objects;
+
 /**
  * Η κλάση αυτή αντιπροσωπεύει την οντότητα του αυτοκινήτου.
- * Σε αυτή καταγράφονται οι ιδιότητες που έχει ένα αυτοκίνητο,όπως το id του στη βάση δεδομένων,η πινακίδα του,
- * η μάρκα του, το μοντέλο,το έτος κατασκευής,το χρώμα και η κατάσταση(ενοικιασμένο ή μη).
- @author Αλεξάνδρα Σακελλαριάδη
- @version 0.1(2025.11.15)
+ * Σε αυτή καταγράφονται οι ιδιότητες που έχει ένα αυτοκίνητο, όπως το id του στη βάση δεδομένων, η πινακίδα του,
+ * η μάρκα του, το μοντέλο, το έτος κατασκευής, το χρώμα και η κατάσταση(ενοικιασμένο ή μη).
+ *
+ *@author Αλεξάνδρα Σακελλαριάδη
+ *@version 0.1(2025.11.15)
 */
 public class Car {
     //Κωδικός αυτοκινήτου
@@ -150,5 +154,29 @@ public class Car {
      */
     public void setType(String type) {
         this.type = type;
+    }
+
+    /**
+     * Υπερφόρτωση για ισότητα 2 αντικειμένων τύπου Car
+     * @param o Αντικείμενο
+     * @return true/false
+     */
+    @Override
+    public boolean equals(Object o) {
+        if(this == o){
+            return true;
+        }
+        if(!(o instanceof Car)){
+            return false;
+        }
+        Car car = (Car)o;
+        return (((Car) o).getId().equals(this.getId()));
+    }
+    /**
+     * @return Ακέραιος βάση του οποίου ένα αντικείμενο μπαίνει σε πίνακα κατακερματισμού
+     */
+    @Override
+    public int hashCode(){
+        return Objects.hash(id);
     }
 }
