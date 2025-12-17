@@ -179,4 +179,13 @@ public class Car {
     public int hashCode(){
         return Objects.hash(id);
     }
+
+    /**
+     * @return String που περιέχει όλα τα χαρακτηριστικά του αυτοκινήτου
+     */
+    @Override
+    public String toString(){
+        return ("Id: "+getId()+",Plate: "+getPlate()+",CarBrand: "+getCarBrand()+",Type: "+getType()+",Model: "+getModel()+",Year: "+getYear()+",Color: "+getColor()+",Situation: "+getSituation());
+
+    }
 }

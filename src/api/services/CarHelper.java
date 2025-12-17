@@ -4,35 +4,95 @@ import java.util.*;
 import api.model.Car;
 
 public class CarHelper {
-    public HashMap<String, Car> readFroFileCars(String fileName)throws Exception {
-        HashMap<String, Car> cars = new HashMap<>();
+    public AllCars readFromFileCars(String fileName)throws Exception {
+        AllCars allCars=new AllCars();
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
-            String line = br.readLine();
-            while (line != null) {
-                String[] tokens = line.split(",");
-                if (line.isEmpty()) {
+            String line;
+            int numberOfLine=0;
+            while ((line=br.readLine())!= null) {
+                numberOfLine++;
+                if(numberOfLine==1){
                     continue;
                 }
-                String id = tokens[0];
-                if (cars.containsKey(id)) {
-                    throw new Exception("Duplicate car id: " + id);
+                String[] tokens = line.split(",");
+                if (line.trim().isEmpty()) {
+                    continue;
                 }
-                String plate = tokens[1];
-                for (Car car : cars.values()) {
+                if (tokens.length<8) {
+                    throw new Exception("The line "+numberOfLine+" has less fields");
+                }
+                String id = tokens[0].trim();
+                if (allCars.getCar(id)!=null) {
+                    throw new Exception("Duplicate car id: " + id+" in line "+numberOfLine);
+                }
+                String plate = tokens[1].trim();
+                for (Car car : allCars.getAllCars().values()) {
                     if (car.getPlate().equals(plate)) {
-                        throw new Exception("Duplicate car plate: " + plate);
+                        throw new Exception("Duplicate car plate: " + plate+" in line "+numberOfLine);
                     }
                 }
                 String carBrand = tokens[2];
                 String type = tokens[3];
                 String model = tokens[4];
-                int year = Integer.parseInt(tokens[5].trim());
+                int year;
+                try {
+                    year = Integer.parseInt(tokens[5].trim());
+
+                }catch (NumberFormatException e){
+                    throw new Exception("Invalid year in line: "+numberOfLine);
+                }
                 String color = tokens[6];
                 String situation = tokens[7];
                 Car c = new Car(id, plate, carBrand, type, model, year, color, situation);
-                cars.put(id, c);
+                allCars.addCar(c);
             }
         }
-        return cars;
+        return allCars;
     }
+
+    public void writeCarsToBinaryFile(String filename, AllCars allCars) throws IOException {
+        try(ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filename))) {
+            oos.writeObject(allCars.getAllCars());
+        }
+    }
+    public HashMap<String,Car> readCarsFromBinaryFile(String filename) throws IOException, ClassNotFoundException {
+        try(ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filename))) {
+            Object o = ois.readObject();
+            if(o instanceof HashMap){
+                HashMap<String,Car> carMap=(HashMap<String,Car>) o;
+                for (Object item: carMap.values()) {
+                    if (!(item instanceof Car)) {
+                        throw new ClassNotFoundException("File does not contain Car objects!");
+                    }
+                }
+                return carMap;
+            }else{
+                throw new ClassNotFoundException("File does not contain a HashMap!");
+            }
+        }catch (EOFException e){
+            throw new IOException("Empty or corrupted file: "+filename);
+        }
+    }
+
+
+
+    public boolean removeCars(AllCars allCars, Set<String> codesToRemove) {
+        boolean removed = false;
+        HashSet<String> lowercaseCodes = new HashSet<>();
+        for(String code : codesToRemove) {
+            lowercaseCodes.add(code.toLowerCase());
+        }
+        Iterator<Car> iterator = allCars.getAllCars().values().iterator();
+        while(iterator.hasNext()) {
+            Car car = iterator.next();
+            if(lowercaseCodes.contains(car.getId().toLowerCase())) {
+                iterator.remove();
+                removed = true;
+            }
+        }
+        return removed;
+    }
+
+
+
 }
