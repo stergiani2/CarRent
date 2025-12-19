@@ -37,6 +37,9 @@ public class CarHelper {
                 int year;
                 try {
                     year = Integer.parseInt(tokens[5].trim());
+                    if(year<1900){
+                        throw new Exception("Invalid year in line: "+numberOfLine);
+                    }
 
                 }catch (NumberFormatException e){
                     throw new Exception("Invalid year in line: "+numberOfLine);
