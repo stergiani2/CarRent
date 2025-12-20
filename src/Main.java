@@ -2,7 +2,7 @@ import api.model.Car;
 import api.services.AllCars;
 import api.services.AllClients;
 import api.services.CarHelper;
-import gui.*;
+import gui.CarsFrame;
 import java.io.*;
 import java.util.*;
 
@@ -22,6 +22,7 @@ public class Main {
             System.out.println("Error in reading from file: "+e.getMessage());
             return;
         }
+        new CarsFrame();
 
     }
 }

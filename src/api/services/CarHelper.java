@@ -4,6 +4,7 @@ import java.util.*;
 import api.model.Car;
 
 public class CarHelper {
+    private String binaryFile="cars.dat";
     public AllCars readFromFileCars(String fileName)throws Exception {
         AllCars allCars=new AllCars();
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
@@ -94,6 +95,12 @@ public class CarHelper {
             }
         }
         return removed;
+    }
+
+    public void saveToBinary(AllCars allCars) throws IOException{
+        try(ObjectOutputStream oos=new ObjectOutputStream(new FileOutputStream(binaryFile))) {
+                oos.writeObject(allCars.getAllCars());
+        }
     }
 
 
