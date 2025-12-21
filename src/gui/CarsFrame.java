@@ -131,4 +131,20 @@ public class CarsFrame extends JFrame {
 
         }*/
 
+        private JPanel createButtonPanel(){
+                JPanel panel=new JPanel(new FlowLayout(FlowLayout.CENTER,15,10));
+
+                addButton=new JButton("Προσθήκη");
+                deleteButton=new JButton("Διαγραφή");
+                refreshButton=new JButton("Ανανέωση");
+                saveButton=new JButton("Αποθήκευση");
+
+                panel.add(addButton);
+                panel.add(deleteButton);
+                panel.add(refreshButton);
+                panel.add(saveButton);
+
+                return panel;
+        }
+
 }
