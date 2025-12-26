@@ -3,179 +3,352 @@ package gui;
 import api.model.Car;
 import api.services.AllCars;
 import api.services.CarHelper;
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.util.HashMap;
+
+import static java.lang.Integer.parseInt;
 
 public class CarsFrame extends JFrame {
-        private AllCars allCars;
-        private CarHelper carHelper;
-        private JTable carsTable;
-        private JLabel statusLabel;
-        private JButton addButton,deleteButton,saveButton,refreshButton;
-        private DefaultTableModel tableModel;
+    private AllCars allCars;
+    private CarHelper carHelper;
+    private JTable carTable;
+    private DefaultTableModel tableModel;
+    private JTextField searchField;
+    private JComboBox<String> searchComboBox;
 
-        private final String[] COLUMN_CARS={
-                "ID","Πινακίδα","Μάρκα","Τύπος","Μοντέλο","Έτος","Χρώμα","Κατάσταση"};
+    public CarsFrame(AllCars allCars) {
+        this.allCars = allCars;
+        this.carHelper = new CarHelper();
+        initComponents();
+        setTitle("Διαχείριση Αυτοκινήτων");
+        setSize(1000, 600);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setVisible(true);
+    }
 
-        public CarsFrame() {
-                 carHelper=new CarHelper();
-                initializeFrame();
-                loadCarsData();
-                initComponents();
+    private void initComponents() {
+        setLayout(new BorderLayout(10, 10));
 
+        // Πάνελ μενού
+        JMenuBar menuBar = new JMenuBar();
+        JMenu fileMenu = new JMenu("Αρχείο");
+
+        JMenuItem loadFromCSVItem = new JMenuItem("Φόρτωση από CSV");
+        loadFromCSVItem.addActionListener(e -> loadFromCSV());
+        fileMenu.add(loadFromCSVItem);
+
+        JMenuItem saveToBinaryItem = new JMenuItem("Αποθήκευση σε Binary");
+        saveToBinaryItem.addActionListener(e -> saveToBinary());
+        fileMenu.add(saveToBinaryItem);
+
+        JMenuItem loadFromBinaryItem = new JMenuItem("Φόρτωση από Binary");
+        loadFromBinaryItem.addActionListener(e -> loadFromBinary());
+        fileMenu.add(loadFromBinaryItem);
+
+        JMenuItem exitItem = new JMenuItem("Έξοδος");
+        exitItem.addActionListener(e -> dispose());
+        fileMenu.add(exitItem);
+
+        menuBar.add(fileMenu);
+        setJMenuBar(menuBar);
+
+        // Πάνελ αναζήτησης
+        JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        searchPanel.add(new JLabel("Αναζήτηση:"));
+        searchComboBox = new JComboBox<>(new String[]{"Όλα", "ID", "Πινακίδα", "Μάρκα", "Τύπος", "Μοντέλο", "Χρώμα", "Κατάσταση"});
+        searchPanel.add(searchComboBox);
+        searchField = new JTextField(20);
+        searchPanel.add(searchField);
+        JButton searchButton = new JButton("Αναζήτηση");
+        searchButton.addActionListener(e -> searchCars());
+        searchPanel.add(searchButton);
+        JButton clearSearchButton = new JButton("Καθαρισμός");
+        clearSearchButton.addActionListener(e -> clearSearch());
+        searchPanel.add(clearSearchButton);
+
+        add(searchPanel, BorderLayout.NORTH);
+
+        // Πίνακας αυτοκινήτων
+        String[] columns = {"ID", "Πινακίδα", "Μάρκα", "Τύπος", "Μοντέλο", "Έτος", "Χρώμα", "Κατάσταση"};
+        tableModel = new DefaultTableModel(columns, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        carTable = new JTable(tableModel);
+        JScrollPane scrollPane = new JScrollPane(carTable);
+        add(scrollPane, BorderLayout.CENTER);
+
+        // Κουμπιά διαχείρισης
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+
+        JButton addButton = new JButton("Προσθήκη Αυτοκινήτου");
+        addButton.addActionListener(e -> addCar());
+        buttonPanel.add(addButton);
+
+        JButton editButton = new JButton("Επεξεργασία");
+        editButton.addActionListener(e -> editCar());
+        buttonPanel.add(editButton);
+
+        JButton deleteButton = new JButton("Διαγραφή");
+        deleteButton.addActionListener(e -> deleteCar());
+        buttonPanel.add(deleteButton);
+
+        JButton refreshButton = new JButton("Ανανέωση");
+        refreshButton.addActionListener(e -> refreshTable());
+        buttonPanel.add(refreshButton);
+
+        JButton importCSVButton = new JButton("Εισαγωγή CSV");
+        importCSVButton.addActionListener(e -> importCSV());
+        buttonPanel.add(importCSVButton);
+
+        add(buttonPanel, BorderLayout.SOUTH);
+
+        refreshTable();
+    }
+
+    private void refreshTable() {
+        tableModel.setRowCount(0);
+        for (Car car : allCars.getAllCars().values()) {
+            tableModel.addRow(new Object[]{
+                    car.getId(),
+                    car.getPlate(),
+                    car.getCarBrand(),
+                    car.getType(),
+                    car.getModel(),
+                    car.getYear(),
+                    car.getColor(),
+                    car.getSituation()
+            });
         }
-        private void initComponents(){
-                JPanel tablePanel=createTablePanel();
-                JPanel buttonPanel=createButtonPanel();
-                add(new JScrollPane(tablePanel),BorderLayout.CENTER);
-                add(buttonPanel,BorderLayout.SOUTH);
-                setupListeners();
-        }
-        public void initializeFrame(){
-                setTitle("Διαχείριση αυτοκινήτων");
-                setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                setSize(1200,700);
-                setLocationRelativeTo(null);
-                setLayout(new BorderLayout(10,10));
+    }
 
-                JPanel contentPanel=new JPanel(new BorderLayout(10,10));
-                contentPanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
-                add(contentPanel,BorderLayout.CENTER);
-                setVisible(true);
+    private void searchCars() {
+        String searchText = searchField.getText().trim().toLowerCase();
+        String searchType = (String) searchComboBox.getSelectedItem();
 
-        }
-        public void loadCarsData(){
-                try {
-                        allCars=carHelper.readFromFileCars("vehicles_with_plates.csv");
-                        statusLabel.setText("Φορτώθηκαν " + allCars.getAllCars().size() + " αυτοκίνητα από αρχείο");
+        tableModel.setRowCount(0);
 
-                }catch (Exception e1){
-                        JOptionPane.showMessageDialog(this,"Σφάλμα φόρτωσης αρχείου: "+e1.getMessage(),"Σφάλμα",JOptionPane.WARNING_MESSAGE);
-                        allCars=new AllCars();
+        for (Car car : allCars.getAllCars().values()) {
+            boolean match = false;
+
+            if (searchText.isEmpty()) {
+                match = true;
+            } else {
+                switch (searchType) {
+                    case "Όλα":
+                        match = car.getId().toLowerCase().contains(searchText) ||
+                                car.getPlate().toLowerCase().contains(searchText) ||
+                                car.getCarBrand().toLowerCase().contains(searchText) ||
+                                car.getType().toLowerCase().contains(searchText) ||
+                                car.getModel().toLowerCase().contains(searchText) ||
+                                car.getColor().toLowerCase().contains(searchText) ||
+                                car.getSituation().toLowerCase().contains(searchText);
+                        break;
+                    case "ID":
+                        match=car.getId().toLowerCase().contains(searchText);
+                        break;
+                    case "Πινακίδα":
+                        match = car.getPlate().toLowerCase().contains(searchText);
+                        break;
+                    case "Μάρκα":
+                        match = car.getCarBrand().toLowerCase().contains(searchText);
+                        break;
+                    case "Τύπος":
+                        match = car.getType().toLowerCase().contains(searchText);
+                        break;
+                    case "Μοντέλο":
+                        match = car.getModel().toLowerCase().contains(searchText);
+                        break;
+                    case "Χρώμα":
+                        match = car.getColor().toLowerCase().contains(searchText);
+                        break;
+                    case "Κατάσταση":
+                        match = car.getSituation().toLowerCase().contains(searchText);
+                        break;
                 }
-        }
-        private void setupListeners(){
-                addButton.addActionListener(e -> addNewCar());
-                deleteButton.addActionListener(e -> deleteCar());
-                saveButton.addActionListener(e -> saveCars());
-                refreshButton.addActionListener(e -> loadCarsToTable());
-        }
-        private void loadCarsToTable(){
-                tableModel.setRowCount(0);
-                try {
-                        int count=0;
-                        for(Car car:allCars.getAllCars().values()){
-                                Object[] row={car.getId(),car.getPlate(),car.getCarBrand(),car.getType(),car.getModel(),car.getYear(),
-                                        car.getColor(),car.getSituation()
-                                };
-                                tableModel.addRow(row);
-                                count++;
-                        }
-                        statusLabel.setText("Φορτώθηκαν "+count+" αυτοκίνητα.");
+            }
 
-                }catch (Exception e){
-                        JOptionPane.showMessageDialog(this,"Σφάλμα φόρτωσης αυτοκινήτων: "+e.getMessage(),"Σφάλμα",JOptionPane.ERROR_MESSAGE);
+            if (match) {
+                tableModel.addRow(new Object[]{
+                        car.getId(),
+                        car.getPlate(),
+                        car.getCarBrand(),
+                        car.getType(),
+                        car.getModel(),
+                        car.getYear(),
+                        car.getColor(),
+                        car.getSituation()
+                });
+            }
+        }
+    }
+
+    private void clearSearch() {
+        searchField.setText("");
+        searchComboBox.setSelectedIndex(0);
+        refreshTable();
+    }
+
+    private void addCar() {
+        CarDialog dialog = new CarDialog(this, null);
+        dialog.setVisible(true);
+        if (dialog.isSaved()) {
+            Car newCar = dialog.getCar();
+            if (allCars.addCar(newCar)) {
+                JOptionPane.showMessageDialog(this, "Το αυτοκίνητο προστέθηκε επιτυχώς.", "Επιτυχία", JOptionPane.INFORMATION_MESSAGE);
+                refreshTable();
+            } else {
+                JOptionPane.showMessageDialog(this, "Το αυτοκίνητο υπάρχει ήδη ή τα δεδομένα δεν είναι έγκυρα.", "Σφάλμα", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
+    private void editCar() {
+        int selectedRow = carTable.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Παρακαλώ επιλέξτε ένα αυτοκίνητο για επεξεργασία.", "Προειδοποίηση", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        String carId = (String) tableModel.getValueAt(selectedRow, 0);
+        Car selectedCar = allCars.getCar(carId);
+
+        CarDialog dialog = new CarDialog(this, selectedCar);
+        dialog.setVisible(true);
+        if (dialog.isSaved()) {
+            Car updatedCar = dialog.getCar();
+            // Ενημέρωση του αυτοκινήτου
+            allCars.getAllCars().put(carId, updatedCar);
+            refreshTable();
+            JOptionPane.showMessageDialog(this, "Οι αλλαγές αποθηκεύτηκαν.", "Επιτυχία", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
+
+    private void deleteCar() {
+        int selectedRow = carTable.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Παρακαλώ επιλέξτε ένα αυτοκίνητο για διαγραφή.", "Προειδοποίηση", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        String carId = (String) tableModel.getValueAt(selectedRow, 0);
+        int confirm = JOptionPane.showConfirmDialog(this,
+                "Είστε σίγουρος ότι θέλετε να διαγράψετε αυτό το αυτοκίνητο;\nID: " + carId,
+                "Επιβεβαίωση Διαγραφής",
+                JOptionPane.YES_NO_OPTION);
+
+        if (confirm == JOptionPane.YES_OPTION) {
+            allCars.getAllCars().remove(carId);
+            refreshTable();
+            JOptionPane.showMessageDialog(this, "Το αυτοκίνητο διαγράφηκε επιτυχώς.", "Επιτυχία", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
+
+    private void loadFromCSV() {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Επιλογή CSV αρχείου");
+        fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("CSV Files", "csv"));
+
+        int result = fileChooser.showOpenDialog(this);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            try {
+                AllCars loadedCars = carHelper.readFromFileCars(fileChooser.getSelectedFile().getPath());
+                allCars.getAllCars().clear();
+                allCars.getAllCars().putAll(loadedCars.getAllCars());
+                refreshTable();
+                JOptionPane.showMessageDialog(this,
+                        "Φορτώθηκαν " + allCars.getAllCars().size() + " αυτοκίνητα από το CSV αρχείο.",
+                        "Επιτυχία",
+                        JOptionPane.INFORMATION_MESSAGE);
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this,
+                        "Σφάλμα κατά τη φόρτωση: " + e.getMessage(),
+                        "Σφάλμα",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
+    private void saveToBinary() {
+        try {
+            carHelper.saveToBinary(allCars);
+            JOptionPane.showMessageDialog(this,
+                    "Τα δεδομένα αποθηκεύτηκαν επιτυχώς στο binary αρχείο.",
+                    "Επιτυχία",
+                    JOptionPane.INFORMATION_MESSAGE);
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this,
+                    "Σφάλμα κατά την αποθήκευση: " + e.getMessage(),
+                    "Σφάλμα",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void loadFromBinary() {
+        try {
+            AllCars loadedCars=carHelper.loadFromBinaryFile();
+
+            // Αφαίρεση των υπαρχόντων αυτοκινήτων
+            allCars.getAllCars().clear();
+
+            // Προσθήκη των φορτωμένων αυτοκινήτων
+            for (Car car : loadedCars.getAllCars().values()) {
+                allCars.addCar(car);
+            }
+
+            refreshTable();
+            JOptionPane.showMessageDialog(this,
+                    "Φορτώθηκαν " + allCars.getAllCars().size() + " αυτοκίνητα από το binary αρχείο.",
+                    "Επιτυχία",
+                    JOptionPane.INFORMATION_MESSAGE);
+        }catch(Exception e) {
+            JOptionPane.showMessageDialog(this,
+                    "Σφάλμα κατά τη φόρτωση: " + e.getMessage(),
+                    "Σφάλμα",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void importCSV() {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Επιλογή CSV αρχείου για εισαγωγή");
+        fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("CSV Files", "csv"));
+
+        int result = fileChooser.showOpenDialog(this);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            try {
+                AllCars importedCars = carHelper.readFromFileCars(fileChooser.getSelectedFile().getPath());
+                int addedCount = 0;
+                int duplicateCount = 0;
+
+                for (Car car : importedCars.getAllCars().values()) {
+                    if (!allCars.getAllCars().containsKey(car.getId())) {
+                        allCars.addCar(car);
+                        addedCount++;
+                    } else {
+                        duplicateCount++;
+                    }
                 }
+
+                refreshTable();
+                JOptionPane.showMessageDialog(this,
+                        "Εισαγωγή ολοκληρώθηκε!\nΠροστέθηκαν: " + addedCount + "\nΠαράλειψη διπλότυπων: " + duplicateCount,
+                        "Αποτελέσματα Εισαγωγής",
+                        JOptionPane.INFORMATION_MESSAGE);
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this,
+                        "Σφάλμα κατά την εισαγωγή: " + e.getMessage(),
+                        "Σφάλμα",
+                        JOptionPane.ERROR_MESSAGE);
+            }
         }
-        private void saveCars(){
-                try {
-                        carHelper.saveToBinary(allCars);
-                        JOptionPane.showMessageDialog(this,"Τα αυτοκίνητα αποθηκεύτηκαν.","Επιτυχία",JOptionPane.INFORMATION_MESSAGE);
-                        statusLabel.setText("Αποθηκεύτηκαν " + allCars.getAllCars().size() + " αυτοκίνητα");
-                }catch (Exception e){
-                        JOptionPane.showMessageDialog(this,"Σφάλμα αποθήκευσης: "+ e.getMessage(),"Σφάλμα",JOptionPane.ERROR_MESSAGE);
-                }
-        }
-        private void deleteCar(){
-                int selectedRow=carsTable.getSelectedRow();
-                if(selectedRow>=0){
-                        int modelRow=carsTable.convertRowIndexToModel(selectedRow);
-                        String carId=(String) tableModel.getValueAt(modelRow,0);
-                        String plate=(String)  tableModel.getValueAt(modelRow,1);
-                        int confirm=JOptionPane.showConfirmDialog(this,"Θέλετε να διαγράψετε αυτό το αυτοκίνητο με πινακίδα: "+plate+";","Επιβεβαίωση διαγραφής",JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE);
-                        if (confirm==JOptionPane.YES_OPTION){
-                                allCars.getAllCars().remove(carId);
-                                loadCarsToTable();
-                                statusLabel.setText("Διαγράφτηκε το αυτοκίνητο: "+plate);
-                        }else {
-                                JOptionPane.showMessageDialog(this,"Παρακαλώ επιλέξτε ένα αυτοκίνητο για διαγραφή","Προειδοποίηση",JOptionPane.WARNING_MESSAGE);
-                        }
-                }
-        }
-
-        private void addNewCar(){
-                CarDialog dialog=new CarDialog(this,null);
-                dialog.setVisible(true);
-                if(dialog.isSaved()){
-                        Car newCar=dialog.getCar();
-                        if(allCars.addCar(newCar)){
-                                loadCarsToTable();
-                        }
-                }
-        }
-
-
-       /* public JPanel createFilterPanel() {
-                JPanel panel = new JPanel(new GridLayout());
-                panel.setBorder(BorderFactory.createTitledBorder("Φίλτρα αναζήτησης"));
-                GridBagConstraints gbc = new GridBagConstraints();
-                gbc.insets = new Insets(5, 5, 5, 5);
-                gbc.fill = GridBagConstraints.HORIZONTAL;
-
-                gbc.gridx = 0;
-                gbc.gridy = 0;
-                gbc.gridwidth = 3;
-                gbc.weightx = 1.0;
-                searchField = new JTextField(20);
-                panel.add(searchField, gbc);
-
-                gbc.gridx = 4;
-                gbc.gridy = 0;
-                gbc.gridwidth = 1;
-                gbc.weightx = 0;
-                JButton searchButton = new JButton("Αναζήτηση:");
-                searchButton.addActionListener(e -> applyFilters());
-                panel.add(searchButton, gbc);
-                return panel;
-        }*/
-      /*  private void applyFilters(){
-
-        }*/
-
-        private JPanel createButtonPanel(){
-                JPanel panel=new JPanel(new FlowLayout(FlowLayout.CENTER,15,10));
-
-                addButton=new JButton("Προσθήκη");
-                deleteButton=new JButton("Διαγραφή");
-                refreshButton=new JButton("Ανανέωση");
-                saveButton=new JButton("Αποθήκευση");
-
-                panel.add(addButton);
-                panel.add(deleteButton);
-                panel.add(refreshButton);
-                panel.add(saveButton);
-
-                return panel;
-        }
-         private JPanel createTablePanel(){
-                JPanel panel=new JPanel(new BorderLayout());
-                panel.setBorder(BorderFactory.createTitledBorder("Λίστα Αυτοκινήτων"));
-                tableModel=new DefaultTableModel(COLUMN_CARS,0);
-                carsTable=new JTable(tableModel);
-                carsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
-                 carsTable.getColumnModel().getColumn(0).setPreferredWidth(50);//ID
-                 carsTable.getColumnModel().getColumn(1).setPreferredWidth(100);//Πινακίδα
-                 carsTable.getColumnModel().getColumn(2).setPreferredWidth(100);//Μάρκα
-                 carsTable.getColumnModel().getColumn(3).setPreferredWidth(80);//Τύπος
-                 carsTable.getColumnModel().getColumn(4).setPreferredWidth(120);//Μοντέλο
-                 carsTable.getColumnModel().getColumn(5).setPreferredWidth(60);//Έτος
-                 carsTable.getColumnModel().getColumn(6).setPreferredWidth(80);//Χρώμα
-                 carsTable.getColumnModel().getColumn(7).setPreferredWidth(100);//Κατάσταση
-
-                 return panel;
-         }
-
+    }
 }

@@ -5,6 +5,7 @@ import api.model.Car;
 
 public class CarHelper {
     private String binaryFile="cars.dat";
+
     public AllCars readFromFileCars(String fileName)throws Exception {
         AllCars allCars=new AllCars();
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
@@ -54,48 +55,6 @@ public class CarHelper {
         return allCars;
     }
 
-    public void writeCarsToBinaryFile(String filename, AllCars allCars) throws IOException {
-        try(ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filename))) {
-            oos.writeObject(allCars.getAllCars());
-        }
-    }
-    public HashMap<String,Car> readCarsFromBinaryFile(String filename) throws IOException, ClassNotFoundException {
-        try(ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filename))) {
-            Object o = ois.readObject();
-            if(o instanceof HashMap){
-                HashMap<String,Car> carMap=(HashMap<String,Car>) o;
-                for (Object item: carMap.values()) {
-                    if (!(item instanceof Car)) {
-                        throw new ClassNotFoundException("File does not contain Car objects!");
-                    }
-                }
-                return carMap;
-            }else{
-                throw new ClassNotFoundException("File does not contain a HashMap!");
-            }
-        }catch (EOFException e){
-            throw new IOException("Empty or corrupted file: "+filename);
-        }
-    }
-
-
-
-    public boolean removeCars(AllCars allCars, Set<String> codesToRemove) {
-        boolean removed = false;
-        HashSet<String> lowercaseCodes = new HashSet<>();
-        for(String code : codesToRemove) {
-            lowercaseCodes.add(code.toLowerCase());
-        }
-        Iterator<Car> iterator = allCars.getAllCars().values().iterator();
-        while(iterator.hasNext()) {
-            Car car = iterator.next();
-            if(lowercaseCodes.contains(car.getId().toLowerCase())) {
-                iterator.remove();
-                removed = true;
-            }
-        }
-        return removed;
-    }
 
     public void saveToBinary(AllCars allCars) throws IOException{
         try(ObjectOutputStream oos=new ObjectOutputStream(new FileOutputStream(binaryFile))) {
@@ -103,6 +62,29 @@ public class CarHelper {
         }
     }
 
+    public AllCars loadFromBinaryFile() {
+        AllCars allCars = new AllCars();
 
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(binaryFile))) {
+            Object obj=ois.readObject();
+            if(obj instanceof HashMap){
+                @SuppressWarnings("unchecked")
+                HashMap<String, Car> carMap = (HashMap<String, Car>) obj;
+
+                for(Car car:carMap.values()) {
+                    allCars.addCar(car);
+                }
+            }
+            System.out.println("Data loaded successfully from cars.dat");
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found. Starting with empty car list.");
+        } catch (IOException e) {
+            System.out.println("Error reading file: " + e.getMessage());
+        } catch (ClassNotFoundException e) {
+            System.out.println("Class not found: " + e.getMessage());
+        }
+        return allCars;
+
+    }
 
 }

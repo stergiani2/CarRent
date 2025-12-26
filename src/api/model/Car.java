@@ -12,7 +12,7 @@ import java.util.Objects;
 */
 public class Car {
     //Κωδικός αυτοκινήτου
-    private String  id;
+    private String   id;
     //Πινακίδα του αυτοκινήτου
     private String plate;
     //Μάρκα του αυτοκινήτου

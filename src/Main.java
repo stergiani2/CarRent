@@ -24,7 +24,7 @@ public class Main {
             System.out.println("Error in reading from file: "+e.getMessage());
             return;
         }
-        CarsFrame carsFrame=new CarsFrame();
+        CarsFrame carsFrame=new CarsFrame(allCars);
         carsFrame.setVisible(true);
 
     }
