@@ -6,17 +6,38 @@ import api.services.AllCars;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Παράθυρο διαλόγου για την προσθήκη αυτοκινήτου
+ *
+ * @author Αλεξάνδρα Σακελλαριάδη
+ * @version 0.1(2025.12.12)
+ */
 public class CarDialog extends JDialog {
+    //Δομή αυτοκινήτων για την αποθήκευση των αυτοκίνητων
     private AllCars allCars;
+    //Αυτοκίνητο
     private Car car;
+    //Σημαιοφόρος για το αν αποθηκεύτηκαν οι αλλαγές
     private boolean saved=false;
+    //Πεδία χαρακτηριστικών αυτοκινήτου
     private JTextField idField, plateField, brandField, modelField, yearField, colorField,situationField,typeField;
+    //Κουμπιά αποθήκευσης και ακύρωσης
     private JButton saveButton,cancelButton;
+
+    /**
+     * Δημιουργία παραθύρου διαλόγου για την προσθήκη αυτοκινήτου
+     * @param parent Παράθυρο από το οποίο ενεργοποιήθηκε το παράθυρο διαλόγου
+     * @param existingCar Αυτοκίνητο που θα προσθέσουμε
+     */
     public CarDialog(JFrame parent,Car existingCar){
             super(parent,existingCar==null);
             this.car=existingCar;
             initDialog();
     }
+
+    /**
+     * Πεδία που προορίζονται να συμπληρωθούν από τον χρήστη για την προσθήκη αυτοκινήτου
+     */
     private void initDialog(){
         setSize(500,400);
         setLocationRelativeTo(getOwner());
@@ -141,6 +162,9 @@ public class CarDialog extends JDialog {
         getRootPane().setDefaultButton(saveButton);
     }
 
+    /**
+     * Αποθήκευση αυτοκινήτου και έλεγχος των πεδίων
+     */
     private void saveCar(){
         if(idField.getText().trim().isEmpty()){
             showError("Το id είναι υποχρεωτικό πεδίο!");
@@ -172,12 +196,24 @@ public class CarDialog extends JDialog {
         dispose();
     }
 
+    /**
+     * Εμφάνιση λάθους
+     * @param message Μήνυμα κατάλληλου λάθους
+     */
     private void showError(String message){
         JOptionPane.showMessageDialog(this,message,"Σφάλμα Εισαγωγής!",JOptionPane.ERROR_MESSAGE);
     }
+
+    /**
+     * @return saved Για τον έλεγχο αποθήκευσης
+     */
     public boolean isSaved(){
         return saved;
     }
+
+    /**
+     * @return αυτοκινήτου
+     */
     public Car getCar(){
         return car;
     }

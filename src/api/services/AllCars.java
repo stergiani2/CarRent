@@ -90,6 +90,10 @@ public class AllCars {
         }
         return carSet;
     }
+
+    /**
+     * @return Hashmap allCars
+     */
     public HashMap<String, Car> getAllCars(){
         return allCars;
     }

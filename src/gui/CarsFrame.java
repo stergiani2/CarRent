@@ -13,14 +13,32 @@ import java.util.HashMap;
 
 import static java.lang.Integer.parseInt;
 
+/**
+ * Κλάση αυτή δημιουργεί πλαίσιο αλληλεπίδρασης με τον χρήστη για τη διαχείριση αυτοκινήτων, όπως προσθήκη αυτοκινήτου, επεξεργασία, ανανέωση,
+ * αναζήτηση και καθαρισμό.
+ *
+ * @author Αλεξάνδρα Σακελλαριάδη
+ * @version 0.2(2025.12.10)
+ */
 public class CarsFrame extends JFrame {
+    //Δομή AllCars για την αποθήκευση οών των αυτοκινήτων
     private AllCars allCars;
+    //Δομή για τη διαχείριση αρχείων
     private CarHelper carHelper;
+    //Πίνακας που δημιουργεί γραμμές και στήλες για να εμφανίζονται τα αυτοκίνητα
     private JTable carTable;
+    // Περιέχει όλα τα δεδομένα (τιμές των κελιών) και τη δομή (στήλες) του πίνακα
     private DefaultTableModel tableModel;
+    //Πεδίο για την αναζήτηση αυτοκίνητου
     private JTextField searchField;
+    //Μενού επιλογών που ο χρήστης διαλέγει μια τιμή από τη λίστα(Όλα, ID, Πινακίδα, Μάρκα, Τύπος, Μοντέλο, Χρώμα, Κατάσταση)
     private JComboBox<String> searchComboBox;
 
+
+    /**
+     * Κατασκευαστής πλαισίου με τα απαραίτητα στοιχεία
+     * @param allCars Δομή AllCars για την αποθήκευση όλων των αυτοκινήτων
+     */
     public CarsFrame(AllCars allCars) {
         this.allCars = allCars;
         this.carHelper = new CarHelper();
@@ -31,6 +49,10 @@ public class CarsFrame extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setVisible(true);
     }
+
+    /**
+     * Δημιουργία βασικών στοιχείων όπως το πάνελ του μενού, της αναζήτησης, τον πίνακα αυτοκινήτων και των κουμπιών διαχείρισης
+     */
 
     private void initComponents() {
         setLayout(new BorderLayout(10, 10));
@@ -105,14 +127,14 @@ public class CarsFrame extends JFrame {
         refreshButton.addActionListener(e -> refreshTable());
         buttonPanel.add(refreshButton);
 
-        JButton importCSVButton = new JButton("Εισαγωγή CSV");
-        importCSVButton.addActionListener(e -> importCSV());
-        buttonPanel.add(importCSVButton);
-
         add(buttonPanel, BorderLayout.SOUTH);
 
         refreshTable();
     }
+
+    /**
+     * Ανανέωση του πίνακα
+     */
 
     private void refreshTable() {
         tableModel.setRowCount(0);
@@ -130,6 +152,9 @@ public class CarsFrame extends JFrame {
         }
     }
 
+    /**
+     * Αναζήτηση αυτοκινήτου
+     */
     private void searchCars() {
         String searchText = searchField.getText().trim().toLowerCase();
         String searchType = (String) searchComboBox.getSelectedItem();
@@ -191,12 +216,18 @@ public class CarsFrame extends JFrame {
         }
     }
 
+    /**
+     * Καθαρισμός φίλτρου αναζήτησης
+     */
     private void clearSearch() {
         searchField.setText("");
         searchComboBox.setSelectedIndex(0);
         refreshTable();
     }
 
+    /**
+     * Προσθήκη αυτοκινήτου και έλεγχος για το αν υπάρχει ήδη
+     */
     private void addCar() {
         CarDialog dialog = new CarDialog(this, null);
         dialog.setVisible(true);
@@ -211,6 +242,9 @@ public class CarsFrame extends JFrame {
         }
     }
 
+    /**
+     * Επεξεργασία αυτοκίνητου
+     */
     private void editCar() {
         int selectedRow = carTable.getSelectedRow();
         if (selectedRow == -1) {
@@ -232,6 +266,9 @@ public class CarsFrame extends JFrame {
         }
     }
 
+    /**
+     * Διαγραφή αυτοκινήτου
+     */
     private void deleteCar() {
         int selectedRow = carTable.getSelectedRow();
         if (selectedRow == -1) {
@@ -252,6 +289,9 @@ public class CarsFrame extends JFrame {
         }
     }
 
+    /**
+     * Φόρτωση αρχείου τύπου CSV
+     */
     private void loadFromCSV() {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle("Επιλογή CSV αρχείου");
@@ -277,6 +317,9 @@ public class CarsFrame extends JFrame {
         }
     }
 
+    /**
+     * Αποθήκευση δυαδικού αρχείου
+     */
     private void saveToBinary() {
         try {
             carHelper.saveToBinary(allCars);
@@ -292,6 +335,9 @@ public class CarsFrame extends JFrame {
         }
     }
 
+    /**
+     * Φόρτωση αυτοκίνητων από δυαδικό αρχείο
+     */
     private void loadFromBinary() {
         try {
             AllCars loadedCars=carHelper.loadFromBinaryFile();
@@ -317,38 +363,5 @@ public class CarsFrame extends JFrame {
         }
     }
 
-    private void importCSV() {
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setDialogTitle("Επιλογή CSV αρχείου για εισαγωγή");
-        fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("CSV Files", "csv"));
 
-        int result = fileChooser.showOpenDialog(this);
-        if (result == JFileChooser.APPROVE_OPTION) {
-            try {
-                AllCars importedCars = carHelper.readFromFileCars(fileChooser.getSelectedFile().getPath());
-                int addedCount = 0;
-                int duplicateCount = 0;
-
-                for (Car car : importedCars.getAllCars().values()) {
-                    if (!allCars.getAllCars().containsKey(car.getId())) {
-                        allCars.addCar(car);
-                        addedCount++;
-                    } else {
-                        duplicateCount++;
-                    }
-                }
-
-                refreshTable();
-                JOptionPane.showMessageDialog(this,
-                        "Εισαγωγή ολοκληρώθηκε!\nΠροστέθηκαν: " + addedCount + "\nΠαράλειψη διπλότυπων: " + duplicateCount,
-                        "Αποτελέσματα Εισαγωγής",
-                        JOptionPane.INFORMATION_MESSAGE);
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(this,
-                        "Σφάλμα κατά την εισαγωγή: " + e.getMessage(),
-                        "Σφάλμα",
-                        JOptionPane.ERROR_MESSAGE);
-            }
-        }
-    }
 }

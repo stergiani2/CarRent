@@ -3,9 +3,22 @@ import java.io.*;
 import java.util.*;
 import api.model.Car;
 
+/**
+ * Η κλάση αυτή διαχειρίζεται τα αρχεία.Πραγματοποιεί διάβασμα από αρχείο, διάβασμα που δυαδικό αρχείο και αποθήκευση.
+ *
+ * @author Αλεξάνδρα Σακελλαριάδη
+ * @version 0.1(2025.12.05)
+ */
 public class CarHelper {
+    //Δυαδικό αρχείο
     private String binaryFile="cars.dat";
 
+    /**
+     * Διάβασμα αρχείου για αυτοκίνητα
+     * @param fileName
+     * @return Δομή AllCars που αποθηκεύει όλα τα αυτοκίνητα που διαβάζονται από το αρχείο
+     * @throws Exception για μη-αποδεκτές τιμές διαβάσματος
+     */
     public AllCars readFromFileCars(String fileName)throws Exception {
         AllCars allCars=new AllCars();
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
@@ -55,13 +68,21 @@ public class CarHelper {
         return allCars;
     }
 
-
+    /**
+     * Αποθήκευση της δομής AllCars
+     * @param allCars
+     * @throws IOException
+     */
     public void saveToBinary(AllCars allCars) throws IOException{
         try(ObjectOutputStream oos=new ObjectOutputStream(new FileOutputStream(binaryFile))) {
                 oos.writeObject(allCars.getAllCars());
         }
     }
 
+    /**
+     * Φόρτωση δυαδικού αρχείου
+     * @return δομή AllCars που αποθηκεύει όλα τα αυτοκίνητα από το δυαδικό αρχείο
+     */
     public AllCars loadFromBinaryFile() {
         AllCars allCars = new AllCars();
 
