@@ -72,5 +72,8 @@ public class AllClients {
         }
         return null;
     }
+    public HashSet<Client> getAllClients(){
+        return clients;
+    }
 
 }
