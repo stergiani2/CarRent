@@ -100,10 +100,6 @@ public class CarsFrame extends JFrame {
         deleteButton.addActionListener(e -> deleteCar());
         buttonPanel.add(deleteButton);
 
-        JButton refreshButton = new JButton("Ανανέωση");
-        refreshButton.addActionListener(e -> refreshTable());
-        buttonPanel.add(refreshButton);
-
         add(buttonPanel, BorderLayout.SOUTH);
 
         refreshTable();

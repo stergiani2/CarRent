@@ -68,6 +68,10 @@ public class AllClients {
     public Client searchClientByPhone(String phone) {
         return null;
     }
+
+    /**
+     * @return Επιστρέφει όλους τους πελάτες
+     */
     public HashSet<Client> getAllClients(){
         return clients;
     }

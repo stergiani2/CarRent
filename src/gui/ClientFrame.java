@@ -7,8 +7,6 @@ import api.services.ClientHelper;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.*;
 
 /**
@@ -109,10 +107,6 @@ public class ClientFrame extends JFrame {
         JButton editButton = new JButton("Επεξεργασία");
         editButton.addActionListener(e -> editClient());
         buttonPanel.add(editButton);
-
-        JButton refreshButton = new JButton("Ανανέωση");
-        refreshButton.addActionListener(e -> refreshTable());
-        buttonPanel.add(refreshButton);
 
         add(buttonPanel, BorderLayout.SOUTH);
 

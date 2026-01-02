@@ -29,7 +29,7 @@ public class AllCars {
      * @return true/false
      */
     public boolean addCar(Car car) {
-        if(allCars.containsKey(car.getId())||car==null) {
+        if(allCars.containsKey(car.getId())) {
             return false;
         }
         allCars.put(car.getId(), car);

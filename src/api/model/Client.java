@@ -12,9 +12,9 @@ public class Client {
     //Το ΑΦΜ του πελάτη
     private String AFM;
     //Το όνομα του πελάτη
-    private String first_name;
+    private String firstName;
     //Το επίθετο του πελάτη
-    private String last_name;
+    private String lastName;
     //Το κινητό τηλέφωνο του πελάτη
     private String phone;
     //Το email του πελάτη
@@ -23,15 +23,15 @@ public class Client {
     /**
      * Κατασκευαστής για τη δημιουργία αντικειμένων της κλάσης Client
      * @param AFM ΑΦΜ
-     * @param first_name To όνομα
-     * @param last_name Το επίθετο
+     * @param firstName To όνομα
+     * @param lastName Το επίθετο
      * @param phone Το τηλέφωνο
      * @param email Η ηλεκτρονική διεύθυνση
      */
-    public Client(String AFM, String first_name, String last_name, String phone, String email) {
+    public Client(String AFM, String firstName, String lastName, String phone, String email) {
         this.AFM = AFM;
-        this.first_name = first_name;
-        this.last_name = last_name;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.phone = phone;
         this.email = email;
     }
@@ -47,14 +47,14 @@ public class Client {
      * @return Το όνομα
      */
     public String getFirstName() {
-        return first_name;
+        return firstName;
     }
 
     /**
      * @return Το επίθετο
      */
     public String getLastName() {
-        return last_name;
+        return lastName;
     }
 
     /**
@@ -83,15 +83,15 @@ public class Client {
      * Θέτει το όνομα
      * @param first_name Το όνομα του πελάτη
      */
-    public void setFirst_name(String first_name) {
-        this.first_name = first_name;
+    public void setFirstName(String first_name) {
+        this.firstName = firstName;
     }
     /**
      * Θέτει το επώνυμο του πελάτη
      * @param last_name Το επώνυμο του πελάτη
      */
-    public void setLast_name(String last_name) {
-        this.last_name = last_name;
+    public void setLastName(String last_name) {
+        this.lastName = lastName;
     }
     /**
      * Θέτει το τηλέφωνο του πελάτη
@@ -113,7 +113,7 @@ public class Client {
      */
     @Override
     public boolean equals(Object o){
-        if(this == o) {
+        if(this==o) {
             return true;
         }
         if(!(o instanceof Client)) {

@@ -2,7 +2,6 @@ package api.services;
 import java.io.*;
 import java.util.*;
 import api.model.Car;
-import api.model.Client;
 
 /**
  * Η κλάση αυτή διαχειρίζεται τα αρχεία.Πραγματοποιεί διάβασμα από αρχείο, διάβασμα που δυαδικό αρχείο και αποθήκευση.
@@ -37,16 +36,16 @@ public class CarHelper {
                     continue;
                 }
                 if (tokens.length<8) {
-                    throw new Exception("The line "+numberOfLine+" has less fields");
+                    throw new Exception("Στη γραμμή "+numberOfLine+" υπάρχουν λιγότερα πεδία!");
                 }
                 String id = tokens[0].trim();
                 if (allCars.getCar(id)!=null) {
-                    throw new Exception("Duplicate car id: " + id+" in line "+numberOfLine);
+                    throw new Exception("Διπλό id αυτοκινήτου: " + id+" στη γραμμή "+numberOfLine);
                 }
                 String plate = tokens[1].trim();
                 for (Car car : allCars.getAllCars().values()) {
                     if (car.getPlate().equals(plate)) {
-                        throw new Exception("Duplicate car plate: " + plate+" in line "+numberOfLine);
+                        throw new Exception("Διπλή πινακίδα: " + plate+" στη γραμμή "+numberOfLine);
                     }
                 }
                 String carBrand = tokens[2];
@@ -56,11 +55,11 @@ public class CarHelper {
                 try {
                     year = Integer.parseInt(tokens[5].trim());
                     if(year<1900){
-                        throw new Exception("Invalid year in line: "+numberOfLine);
+                        throw new Exception("Μη έγκυρη χρονολογία στη γραμμή: "+numberOfLine);
                     }
 
                 }catch (NumberFormatException e){
-                    throw new Exception("Invalid year in line: "+numberOfLine);
+                    throw new Exception("Μη έγκυρη χρονολογία στη γραμμή: "+numberOfLine);
                 }
                 String color = tokens[6];
                 String situation = tokens[7];
@@ -71,7 +70,7 @@ public class CarHelper {
         return allCars;
     }
     /**
-     * Αποθήκευση όλων των πελατών σε αρχείο
+     * Αποθήκευση όλων των αυτοκινήτων σε αρχείο
      */
     public void saveCarToFile() {
         try (BufferedWriter writer=new BufferedWriter(new FileWriter("vehicles_with_plates.csv"))) {
