@@ -1,4 +1,8 @@
 import api.model.Car;
+import api.model.Employee;
+import api.services.*;
+import gui.LoginFrame;
+
 import api.services.AllCars;
 import api.services.AllClients;
 import api.services.CarHelper;
@@ -27,7 +31,36 @@ public class Main {
         }
         CarsFrame carsFrame=new CarsFrame(allCars);
         carsFrame.setVisible(true);
+        //ΑΡΧΙΚΟΠΟΙΗΣΗ ΠΕΛΑΤΩΝ
         ClientFrame clientFrame=new ClientFrame(allClients);
         clientFrame.setVisible(true);
+        //ΦΟΡΤΩΣΗ ΥΠΑΛΛΗΛΩΝ
+        UserHelper userHelper=new UserHelper();
+        HashMap<String, Employee> employees = userHelper.loadUsersFromBinary();
+
+        if (employees == null) {
+            try {
+                employees = userHelper.readUsersFromCSV();
+                userHelper.saveUsersToBinary(employees);
+                System.out.println("Οι υπάλληλοι φορτώθηκαν από CSV.");
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(
+                        null,
+                        "Σφάλμα φόρτωσης χρηστών",
+                        "Σφάλμα",
+                        JOptionPane.ERROR_MESSAGE
+                );
+                return;
+            }
+        } else {
+            System.out.println("Οι υπάλληλοι φορτώθηκαν από binary αρχείο.");
+        }
+        //SERVICES
+        AuthService authService = new AuthService(employees);
+        RentalService rentalService = new RentalService();
+        //ΕΚΚΙΝΗΣΗ GUI
+        SwingUtilities.invokeLater(() ->
+                new LoginFrame(authService, allCars, allClients, rentalService)
+        );
     }
 }
