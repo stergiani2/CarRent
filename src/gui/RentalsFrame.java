@@ -7,8 +7,24 @@ import javax.swing.*;
 import java.awt.*;
 import java.time.LocalDate;
 
+/**
+ * Παράθυρο δημιουργίας ενοικίασης.
+ * Ο χρήστης επιλέγει αυτοκίνητο και πελάτη
+ * και καταχωρείται νέα ενοικίαση στο σύστημα.
+ *
+ * @author Καραγιώργου Στεργιανή
+ * @version 0.1(2026.01.01)
+ */
 public class RentalsFrame extends JFrame {
 
+    /**
+     * Κατασκευαστής παραθύρου ενοικιάσεων.
+     *
+     * @param rentalService Υπηρεσία διαχείρισης ενοικιάσεων
+     * @param allCars Δομή αυτοκινήτων
+     * @param allClients Δομή πελατών
+     * @param authService Υπηρεσία αυθεντικοποίησης
+     */
     public RentalsFrame(RentalService rentalService,
                         AllCars allCars,
                         AllClients allClients,
@@ -18,10 +34,17 @@ public class RentalsFrame extends JFrame {
         setSize(400, 300);
         setLocationRelativeTo(null);
 
+        //ComboBox επιλογής αυτοκινήτου
         JComboBox<Car> carBox = new JComboBox<>(
                 allCars.getAllCars().values().toArray(new Car[0]));
 
+        //Κουμπί δημιουργίας ενοικίασης
         JButton rentBtn = new JButton("Ενοικίαση");
+
+        /**
+         * Δημιουργία νέας ενοικίασης.
+         * Ο πελάτης εντοπίζεται με βάση το ΑΦΜ.
+         */
         rentBtn.addActionListener(e -> {
             Car car = (Car) carBox.getSelectedItem();
             Client client = allClients.searchClientByAFM(
