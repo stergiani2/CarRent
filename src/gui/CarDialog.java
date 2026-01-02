@@ -29,17 +29,18 @@ public class CarDialog extends JDialog {
      * @param parent Παράθυρο από το οποίο ενεργοποιήθηκε το παράθυρο διαλόγου
      * @param existingCar Αυτοκίνητο που θα προσθέσουμε
      */
-    public CarDialog(JFrame parent,Car existingCar){
-            super(parent,existingCar==null);
-            this.car=existingCar;
-            initDialog();
+    public CarDialog(JFrame parent,Car existingCar,AllCars allCars){
+        super(parent, existingCar == null ? "Προσθήκη Αυτοκινήτου" : "Επεξεργασία Αυτοκινήτου", true);
+        this.car=existingCar;
+        this.allCars=allCars;
+        initDialog();
     }
 
     /**
      * Πεδία που προορίζονται να συμπληρωθούν από τον χρήστη για την προσθήκη αυτοκινήτου
      */
     private void initDialog(){
-        setSize(500,400);
+        setSize(900,500);
         setLocationRelativeTo(getOwner());
         setLayout(new BorderLayout(10,10));
 
@@ -54,13 +55,13 @@ public class CarDialog extends JDialog {
         mainPanel.add(new JLabel("ID:"),gbc);
 
         gbc.gridx=1;
-        gbc.gridy=0;
         idField=new JTextField(20);
         if(car!=null){
             idField.setText(car.getId());
             idField.setEditable(false);
         }else{
-            idField.setText("CAR" + (allCars.getAllCars().size() + 1));
+            String num=allCars.getAllCars().size()+1+"";
+            idField.setText(num.trim());
         }
         mainPanel.add(idField, gbc);
 
@@ -69,7 +70,6 @@ public class CarDialog extends JDialog {
         mainPanel.add(new JLabel("Πινακίδα:"),gbc);
 
         gbc.gridx=1;
-        gbc.gridy=1;
         plateField=new JTextField(20);
         if(car!=null){
             plateField.setText(car.getPlate());
@@ -81,7 +81,6 @@ public class CarDialog extends JDialog {
         mainPanel.add(new JLabel("Μάρκα:"),gbc);
 
         gbc.gridx=1;
-        gbc.gridy=2;
         brandField=new JTextField(20);
         if(car!=null){
             brandField.setText(car.getCarBrand());
@@ -94,7 +93,6 @@ public class CarDialog extends JDialog {
         mainPanel.add(new JLabel("Τύπος:"),gbc);
 
         gbc.gridx=1;
-        gbc.gridy=2;
         typeField=new JTextField(20);
         if(car!=null){
             typeField.setText(car.getType());
@@ -106,7 +104,6 @@ public class CarDialog extends JDialog {
         mainPanel.add(new JLabel("Μοντέλο:"),gbc);
 
         gbc.gridx=1;
-        gbc.gridy=4;
         modelField=new JTextField(20);
         if(car!=null){
             modelField.setText(car.getModel());
@@ -114,20 +111,21 @@ public class CarDialog extends JDialog {
         mainPanel.add(modelField,gbc);
 
         gbc.gridx=0;
-        gbc.gridy=1;
+        gbc.gridy=5;
         mainPanel.add(new JLabel("Έτος:"),gbc);
 
         gbc.gridx=1;
-        gbc.gridy=5;
         yearField=new JTextField(4);
+        if (car != null) {
+            yearField.setText(String.valueOf(car.getYear()));
+        }
         mainPanel.add(yearField,gbc);
 
         gbc.gridx=0;
         gbc.gridy=6;
-        mainPanel.add(new JLabel("Πινακίδα:"),gbc);
+        mainPanel.add(new JLabel("Χρώμα:"),gbc);
 
         gbc.gridx=1;
-        gbc.gridy=6;
         colorField=new JTextField(15);
         if(car!=null){
             colorField.setText(car.getColor());
@@ -139,7 +137,6 @@ public class CarDialog extends JDialog {
         mainPanel.add(new JLabel("Κατάσταση:"),gbc);
 
         gbc.gridx=1;
-        gbc.gridy=7;
         situationField=new JTextField(20);
         if(car!=null){
             situationField.setText(car.getSituation());
@@ -151,7 +148,7 @@ public class CarDialog extends JDialog {
         saveButton.addActionListener(e -> saveCar());
 
         cancelButton=new JButton("Ακύρωση");
-        cancelButton.addActionListener(e -> dispose());
+        cancelButton.addActionListener(e -> {saved = false;dispose();});
 
         buttonPanel.add(saveButton);
         buttonPanel.add(cancelButton);
@@ -191,7 +188,7 @@ public class CarDialog extends JDialog {
             showError("Το έτος πρέπει να είναι αριθμός.");
             return;
         }
-        this.car=new Car(idField.getText().trim(),plateField.getText().trim(),brandField.getText().trim(),typeField.getText().trim(),modelField.getText().trim(),year,colorField.getText().trim(),situationField.getText().trim());
+        car=new Car(idField.getText().trim(),plateField.getText().trim(),brandField.getText().trim(),typeField.getText().trim(),modelField.getText().trim(),year,colorField.getText().trim(),situationField.getText().trim());
         saved=true;
         dispose();
     }

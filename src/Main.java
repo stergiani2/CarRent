@@ -1,14 +1,13 @@
 import api.model.Car;
-import api.model.Employee;
-
-import api.services.*;
+import api.services.AllCars;
+import api.services.AllClients;
+import api.services.CarHelper;
 import gui.CarsFrame;
-import gui.LoginFrame;
+import gui.ClientFrame;
 
 import javax.swing.*;
 import java.io.*;
 import java.util.*;
-import java.util.HashMap;
 
 
 public class Main {
@@ -28,20 +27,7 @@ public class Main {
         }
         CarsFrame carsFrame=new CarsFrame(allCars);
         carsFrame.setVisible(true);
-
+        ClientFrame clientFrame=new ClientFrame(allClients);
+        clientFrame.setVisible(true);
     }
-    UserHelper userHelper=new UserHelper();
-    HashMap<String,Employee> employees=userHelper.loadUsersFromBinary();
-    if (employees== null){
-        try{
-            employees=userHelper.readUsersFromCSV();
-            userHelper.saveUsersToBinary(employees);
-        }catch (Exception e){
-            JOptionPane.showMessageDialog(null,"Σφάλμα φόρτωσης χρηστών","Σφάλμα",JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-    }
-    AuthService authService=new AuthService(employees);
-    RentalService rentalService=new RentalService();
-    SwingUtilities.invokeLater(()-> new LoginFrame(authService,allCars,allClients,rentalService));
 }

@@ -52,7 +52,7 @@ public class AllClients {
     public HashSet<Client> searchByName(String firstName, String lastName) {
         HashSet<Client> clientsByName = new HashSet<>();
         for (Client c : clients) {
-            if(firstName.equals(c.getFirst_name()) && lastName.equals(c.getLast_name())) {
+            if(firstName.equals(c.getFirstName()) && lastName.equals(c.getLastName())) {
                  addClient(c);
             }
         }
@@ -61,16 +61,15 @@ public class AllClients {
 
     /**
      * Αναζήτηση με βάση το τηλέφωνο του πελάτη.
+     *
      * @param phone Το τηλέφωνο
      * @return Τον συγκεκριμένο πελάτη που ψάχνουμε
      */
     public Client searchClientByPhone(String phone) {
-        for (Client c : clients) {
-            if(c.getPhone().equals(phone)) {
-                return c;
-            }
-        }
         return null;
+    }
+    public HashSet<Client> getAllClients(){
+        return clients;
     }
 
 }

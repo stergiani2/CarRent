@@ -257,17 +257,17 @@ public class ClientFrame extends JFrame {
                     allClients.addClient(client);
                 }
             }
-            refreshTable();
-            JOptionPane.showMessageDialog(this, "Φορτώθηκαν " + allClients.getAllClients().size() + " πελάτες από το αρχείο.",
-                    "Πληροφορίες", JOptionPane.INFORMATION_MESSAGE);
-        }catch(FileNotFoundException e) {
-            // Το αρχείο δεν υπάρχει ακόμα, θα δημιουργηθεί όταν προστεθεί ο πρώτος πελάτης
-            System.out.println("Το αρχείο " + File + " δεν βρέθηκε. Θα δημιουργηθεί αυτόματα.");
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Σφάλμα κατά την ανάγνωση του αρχείου: " + e.getMessage(),
-                    "Σφάλμα", JOptionPane.ERROR_MESSAGE);
-        }
+        refreshTable();
+        JOptionPane.showMessageDialog(this, "Φορτώθηκαν " + allClients.getAllClients().size() + " πελάτες από το αρχείο.",
+                "Πληροφορίες", JOptionPane.INFORMATION_MESSAGE);
+    }catch(FileNotFoundException e) {
+        // Το αρχείο δεν υπάρχει ακόμα, θα δημιουργηθεί όταν προστεθεί ο πρώτος πελάτης
+        System.out.println("Το αρχείο " + File + " δεν βρέθηκε. Θα δημιουργηθεί αυτόματα.");
+    } catch (IOException e) {
+        JOptionPane.showMessageDialog(this, "Σφάλμα κατά την ανάγνωση του αρχείου: " + e.getMessage(),
+                "Σφάλμα", JOptionPane.ERROR_MESSAGE);
     }
+}
     /**
      * Αποθήκευση όλων των πελατών σε αρχείο
      */

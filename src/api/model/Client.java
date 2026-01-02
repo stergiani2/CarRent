@@ -46,14 +46,14 @@ public class Client {
     /**
      * @return Το όνομα
      */
-    public String getFirst_name() {
+    public String getFirstName() {
         return first_name;
     }
 
     /**
      * @return Το επίθετο
      */
-    public String getLast_name() {
+    public String getLastName() {
         return last_name;
     }
 

@@ -68,44 +68,5 @@ public class CarHelper {
         return allCars;
     }
 
-    /**
-     * Αποθήκευση της δομής AllCars
-     * @param allCars
-     * @throws IOException
-     */
-    public void saveToBinary(AllCars allCars) throws IOException{
-        try(ObjectOutputStream oos=new ObjectOutputStream(new FileOutputStream(binaryFile))) {
-                oos.writeObject(allCars.getAllCars());
-        }
-    }
-
-    /**
-     * Φόρτωση δυαδικού αρχείου
-     * @return δομή AllCars που αποθηκεύει όλα τα αυτοκίνητα από το δυαδικό αρχείο
-     */
-    public AllCars loadFromBinaryFile() {
-        AllCars allCars = new AllCars();
-
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(binaryFile))) {
-            Object obj=ois.readObject();
-            if(obj instanceof HashMap){
-                @SuppressWarnings("unchecked")
-                HashMap<String, Car> carMap = (HashMap<String, Car>) obj;
-
-                for(Car car:carMap.values()) {
-                    allCars.addCar(car);
-                }
-            }
-            System.out.println("Data loaded successfully from cars.dat");
-        } catch (FileNotFoundException e) {
-            System.out.println("File not found. Starting with empty car list.");
-        } catch (IOException e) {
-            System.out.println("Error reading file: " + e.getMessage());
-        } catch (ClassNotFoundException e) {
-            System.out.println("Class not found: " + e.getMessage());
-        }
-        return allCars;
-
-    }
 
 }

@@ -157,10 +157,18 @@ public class Car {
     }
 
     /**
+     *Θέτει το id
+     * @param id
+     */
+    public void setId(String id){
+        this.id=id;
+    }
+    /**
      * Υπερφόρτωση για ισότητα 2 αντικειμένων τύπου Car
      * @param o Αντικείμενο
      * @return true/false
      */
+
     @Override
     public boolean equals(Object o) {
         if(this == o){
