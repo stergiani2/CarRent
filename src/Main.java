@@ -12,22 +12,27 @@ import java.util.*;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-       CarHelper carHelper=new CarHelper();
-        AllCars allCars;
+        AllCars allCars=new AllCars();
+        CarHelper carHelper=new CarHelper(allCars);
         AllClients allClients = new AllClients();
+
+
+
         try{
             allCars=carHelper.readFromFileCars("vehicles_with_plates.csv");
             for(String id:allCars.getAllCars().keySet()){
                 System.out.println(allCars.getAllCars().get(id));
             }
+            CarsFrame carsFrame=new CarsFrame(allCars);
+            carsFrame.setVisible(true);
 
         } catch (Exception e) {
-            System.out.println("Error in reading from file: "+e.getMessage());
+            System.out.println("Λάθος στο άνοιγμα του αρχείου: "+e.getMessage());
             return;
         }
-        CarsFrame carsFrame=new CarsFrame(allCars);
-        carsFrame.setVisible(true);
+
         ClientFrame clientFrame=new ClientFrame(allClients);
         clientFrame.setVisible(true);
+
     }
 }

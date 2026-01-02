@@ -6,13 +6,6 @@ import api.services.CarHelper;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.util.HashMap;
-
-import static java.lang.Integer.parseInt;
-
 /**
  * Κλάση αυτή δημιουργεί πλαίσιο αλληλεπίδρασης με τον χρήστη για τη διαχείριση αυτοκινήτων, όπως προσθήκη αυτοκινήτου, επεξεργασία, ανανέωση,
  * αναζήτηση και καθαρισμό.
@@ -37,11 +30,10 @@ public class CarsFrame extends JFrame {
 
     /**
      * Κατασκευαστής πλαισίου με τα απαραίτητα στοιχεία
-     * @param allCars Δομή AllCars για την αποθήκευση όλων των αυτοκινήτων
      */
     public CarsFrame(AllCars allCars) {
-        this.allCars = allCars;
-        this.carHelper = new CarHelper();
+        this.carHelper = new CarHelper(allCars);
+        this.allCars=allCars;
         initComponents();
         setTitle("Διαχείριση Αυτοκινήτων");
         setSize(1000, 600);
@@ -135,8 +127,9 @@ public class CarsFrame extends JFrame {
                     car.getSituation()
             });
         }
-        tableModel.fireTableDataChanged();
     }
+
+
 
     /**
      * Αναζήτηση αυτοκινήτου
@@ -221,6 +214,7 @@ public class CarsFrame extends JFrame {
             Car newCar = dialog.getCar();
             if (allCars.addCar(newCar)) {
                 JOptionPane.showMessageDialog(this, "Το αυτοκίνητο προστέθηκε επιτυχώς.", "Επιτυχία", JOptionPane.INFORMATION_MESSAGE);
+                carHelper.saveCarToFile();
                 refreshTable();
             } else {
                 JOptionPane.showMessageDialog(this, "Το αυτοκίνητο υπάρχει ήδη ή τα δεδομένα δεν είναι έγκυρα.", "Σφάλμα", JOptionPane.ERROR_MESSAGE);
@@ -250,6 +244,7 @@ public class CarsFrame extends JFrame {
                 return;
             }
             allCars.getAllCars().put(carId, updatedCar);
+            carHelper.saveCarToFile();
             refreshTable();
             SwingUtilities.invokeLater(() -> {
                 carTable.revalidate();

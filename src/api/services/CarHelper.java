@@ -2,6 +2,7 @@ package api.services;
 import java.io.*;
 import java.util.*;
 import api.model.Car;
+import api.model.Client;
 
 /**
  * Η κλάση αυτή διαχειρίζεται τα αρχεία.Πραγματοποιεί διάβασμα από αρχείο, διάβασμα που δυαδικό αρχείο και αποθήκευση.
@@ -10,9 +11,11 @@ import api.model.Car;
  * @version 0.1(2025.12.05)
  */
 public class CarHelper {
-    //Δυαδικό αρχείο
-    private String binaryFile="cars.dat";
+    private AllCars allCars;
 
+    public CarHelper(AllCars allCars){
+        this.allCars=allCars;
+    }
     /**
      * Διάβασμα αρχείου για αυτοκίνητα
      * @param fileName
@@ -67,6 +70,25 @@ public class CarHelper {
         }
         return allCars;
     }
-
-
+    /**
+     * Αποθήκευση όλων των πελατών σε αρχείο
+     */
+    public void saveCarToFile() {
+        try (BufferedWriter writer=new BufferedWriter(new FileWriter("vehicles_with_plates.csv"))) {
+            for (Car car:allCars.getAllCars().values()){
+                writer.write(car.getId()+","+
+                        car.getPlate()+","+
+                        car.getCarBrand()+","+
+                        car.getType()+","+
+                        car.getModel()+","+
+                        car.getYear()+","+
+                        car.getColor()+","+
+                        car.getSituation());
+                writer.newLine();
+            }
+            System.out.println("Αποθηκεύτηκαν "+allCars.getAllCars().size()+" αυτοκίνητα στο αρχείο.");
+        } catch (IOException e) {
+            System.err.println("Σφάλμα κατά την αποθήκευση στο αρχείο: " + e.getMessage());
+        }
+    }
 }

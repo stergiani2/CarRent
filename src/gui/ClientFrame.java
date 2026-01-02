@@ -2,6 +2,8 @@ package gui;
 
 import api.model.Client;
 import api.services.AllClients;
+import api.services.ClientHelper;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -17,7 +19,7 @@ import java.io.*;
  * @version 0.2(2025.12.10)
  **/
 public class ClientFrame extends JFrame {
-    //Δομή AllCars για την αποθήκευση όλων των πελατών
+    //Δομή AllClients για την αποθήκευση όλων των πελατών
     private AllClients allClients;
     //Πίνακας που δημιουργεί γραμμές και στήλες για να εμφανίζονται τα αυτοκίνητα
     private JTable clientsTable;
@@ -27,8 +29,8 @@ public class ClientFrame extends JFrame {
     private JTextField searchField;
     //Μενού επιλογών που ο χρήστης διαλέγει μια τιμή από τη λίστα (ΑΦΜ, ονοματεπώνυμο ή τηλέφωνο)
     private JComboBox<String> searchComboBox;
-    //Αρχείο για αποθήκευση των πελατών
-    private String File="Clients.txt";
+    //Δομή ClientHelper
+    private ClientHelper clientHelper;
 
     /**
      * Κατασκευαστής πλαισίου με τα απαραίτητα στοιχεία
@@ -36,10 +38,18 @@ public class ClientFrame extends JFrame {
      */
     public ClientFrame(AllClients allClients) {
         this.allClients = allClients;
+        clientHelper=new ClientHelper(allClients);
         initComponents();
         setTitle("Διαχείριση πελατών");
         setSize(1000, 600);
-        loadClientsFromFile();
+        try{
+            clientHelper.loadClientsFromFile();
+            refreshTable();
+        }catch (IOException e){
+            JOptionPane.showMessageDialog(this,
+                    "Σφάλμα κατά την φόρτωση των δεδομένων: " + e.getMessage(),
+                    "Σφάλμα", JOptionPane.ERROR_MESSAGE);
+        }
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setVisible(true);
@@ -200,7 +210,8 @@ public class ClientFrame extends JFrame {
             if (allClients.addClient(newClient)) {
                 JOptionPane.showMessageDialog(this, "Ο πελάτης προστέθηκε επιτυχώς.", "Επιτυχία", JOptionPane.INFORMATION_MESSAGE);
                 refreshTable();
-                saveClientsToFile();
+                clientHelper.saveClientsToFile();
+                refreshTable();
             } else {
                 JOptionPane.showMessageDialog(this, "Ο πελάτης υπάρχει ήδη ή τα δεδομένα δεν είναι έγκυρα.", "Σφάλμα", JOptionPane.ERROR_MESSAGE);
             }
@@ -235,59 +246,12 @@ public class ClientFrame extends JFrame {
                 clientsTable.repaint();
             });
         }
-        saveClientsToFile();
+        clientHelper.saveClientsToFile();
+        refreshTable();
     }
 
-    /**
-     * Φόρτωση πελατών από αρχείο
-     */
-    private void loadClientsFromFile() {
-        try (BufferedReader reader= new BufferedReader(new FileReader(File))) {
-            String line;
-            while ((line = reader.readLine())!=null) {
-                String[] data = line.split(",");
-                if (data.length == 5) {
-                    Client client = new Client(
-                            data[0].trim(),
-                            data[1].trim(),
-                            data[2].trim(),
-                            data[3].trim(),
-                            data[4].trim()
-                    );
-                    allClients.addClient(client);
-                }
-            }
-        refreshTable();
-        JOptionPane.showMessageDialog(this, "Φορτώθηκαν " + allClients.getAllClients().size() + " πελάτες από το αρχείο.",
-                "Πληροφορίες", JOptionPane.INFORMATION_MESSAGE);
-    }catch(FileNotFoundException e) {
-        // Το αρχείο δεν υπάρχει ακόμα, θα δημιουργηθεί όταν προστεθεί ο πρώτος πελάτης
-        System.out.println("Το αρχείο " + File + " δεν βρέθηκε. Θα δημιουργηθεί αυτόματα.");
-    } catch (IOException e) {
-        JOptionPane.showMessageDialog(this, "Σφάλμα κατά την ανάγνωση του αρχείου: " + e.getMessage(),
-                "Σφάλμα", JOptionPane.ERROR_MESSAGE);
-    }
-}
-    /**
-     * Αποθήκευση όλων των πελατών σε αρχείο
-     */
-    private void saveClientsToFile() {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(File))) {
-            for (Client client : allClients.getAllClients()) {
-                writer.write(client.getAFM() + "," +
-                        client.getFirstName() + "," +
-                        client.getLastName() + "," +
-                        client.getPhone() + "," +
-                        client.getEmail());
-                writer.newLine();
-            }
-            writer.flush();
-            System.out.println("Αποθηκεύτηκαν " + allClients.getAllClients().size() + " πελάτες στο αρχείο.");
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Σφάλμα κατά την αποθήκευση στο αρχείο: " + e.getMessage(),
-                    "Σφάλμα", JOptionPane.ERROR_MESSAGE);
-        }
-    }
+
+
 
 
 }

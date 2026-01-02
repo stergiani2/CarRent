@@ -16,9 +16,9 @@ import java.util.Set;
 public class AllCars {
     //Πίνακας κατακερματισμού για την αποθήκευση όλων των αυτοκινήτων στο σύστημα
     HashMap<String,Car> allCars;
-     /**
-      * Κατασκευαστής της κλάσης
-      */
+    /**
+     * Κατασκευαστής της κλάσης
+     */
     public AllCars() {
         allCars = new HashMap<>();
     }
