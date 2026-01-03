@@ -6,6 +6,7 @@ import api.services.CarHelper;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+
 /**
  * Κλάση αυτή δημιουργεί πλαίσιο αλληλεπίδρασης με τον χρήστη για τη διαχείριση αυτοκινήτων, όπως προσθήκη αυτοκινήτου, επεξεργασία, ανανέωση,
  * αναζήτηση και καθαρισμό.
@@ -37,6 +38,11 @@ public class CarsFrame extends JFrame {
         initComponents();
         setTitle("Διαχείριση Αυτοκινήτων");
         setSize(1000, 600);
+        try {
+            allCars=carHelper.readFromFileCars("vehicles_with_plates.csv");
+        }catch (Exception e){
+            JOptionPane.showMessageDialog(this, "Το αρχείο δεν άνοιξε!", "Σφάλμα", JOptionPane.ERROR_MESSAGE);
+        }
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setVisible(true);

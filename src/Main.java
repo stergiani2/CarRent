@@ -4,35 +4,24 @@ import api.services.AllClients;
 import api.services.CarHelper;
 import gui.CarsFrame;
 import gui.ClientFrame;
+import gui.ManagementGUI;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.*;
 import java.util.*;
 
-
-public class Main {
+public class Main extends JFrame{
     public static void main(String[] args) throws IOException {
+        AllClients allClients = new AllClients();
         AllCars allCars=new AllCars();
         CarHelper carHelper=new CarHelper(allCars);
-        AllClients allClients = new AllClients();
+        ManagementGUI managementGUI=new ManagementGUI(allCars,allClients);
 
 
 
-        try{
-            allCars=carHelper.readFromFileCars("vehicles_with_plates.csv");
-            for(String id:allCars.getAllCars().keySet()){
-                System.out.println(allCars.getAllCars().get(id));
-            }
-            CarsFrame carsFrame=new CarsFrame(allCars);
-            carsFrame.setVisible(true);
-
-        } catch (Exception e) {
-            System.out.println("Λάθος στο άνοιγμα του αρχείου: "+e.getMessage());
-            return;
-        }
-
-        ClientFrame clientFrame=new ClientFrame(allClients);
-        clientFrame.setVisible(true);
+       // ClientFrame clientFrame=new ClientFrame(allClients);
+       // clientFrame.setVisible(true);
 
     }
 }
