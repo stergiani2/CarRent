@@ -55,12 +55,10 @@ public class Main {
         } else {
             System.out.println("Οι υπάλληλοι φορτώθηκαν από binary αρχείο.");
         }
-        //SERVICES
+        //ΥΠΗΡΕΣΙΕΣ
         AuthService authService = new AuthService(employees);
         RentalService rentalService = new RentalService();
-        //ΕΚΚΙΝΗΣΗ GUI
-        SwingUtilities.invokeLater(() ->
-                new LoginFrame(authService, allCars, allClients, rentalService)
-        );
+        //ΕΚΚΙΝΗΣΗ LOGIN
+        new LoginFrame(authService, allCars, allClients, rentalService);
     }
 }
