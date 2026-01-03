@@ -57,7 +57,6 @@ public class ClientHelper {
                         client.getEmail());
                 writer.newLine();
             }
-            writer.flush();
             System.out.println("Αποθηκεύτηκαν "+allClients.getAllClients().size()+" πελάτες στο αρχείο.");
         } catch (IOException e) {
             System.err.println("Σφάλμα κατά την αποθήκευση στο αρχείο: " + e.getMessage());

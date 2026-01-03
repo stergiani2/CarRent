@@ -173,9 +173,11 @@ public class CarDialog extends JDialog {
         }
         if(brandField.getText().trim().isEmpty()){
             showError("Η μάρκα είναι υποχρεωτικό πεδίο!");
+            return;
         }
         if (modelField.getText().trim().isEmpty()){
             showError("Το μοντέλο είναι υποχρεωτικό πεδίο!");
+            return;
         }
         int year;
         try{

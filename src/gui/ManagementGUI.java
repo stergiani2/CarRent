@@ -3,17 +3,21 @@ import javax.swing.*;
 
 import api.services.AllCars;
 import api.services.AllClients;
-import api.services.CarHelper;
-import gui.CarsFrame;
-import gui.ClientFrame;
+
 
 import java.awt.*;
 
 public class ManagementGUI extends JFrame{
+    //Δομή AllCars
     private AllCars allCars;
+    //Δομή AllClients
     private AllClients allClients;
 
-
+    /**
+     * Παράθυρο γενικής διαχείρισης
+     * @param allCars Αποθηκεύει όλα τα αυτοκίνητα
+     * @param allClients Αποθηκεύει όλους τους πελάτες
+     */
     public ManagementGUI(AllCars allCars,AllClients allClients){
         this.allCars=allCars;
         this.allClients=allClients;
@@ -24,11 +28,19 @@ public class ManagementGUI extends JFrame{
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
     }
+
+    /**
+     * Βασικά στοιχεία
+     */
     private void initComponents(){
         setLayout(new BorderLayout(10, 10));
         add(createMainPanel(), BorderLayout.CENTER);
     }
 
+    /**
+     * Πάνελ για τις κατηγορίες αυτοκίνητα, πελάτες, υπάλληλοι, ενοικίαση
+     * @return panel
+     */
         private JPanel createMainPanel() {
             JPanel panel = new JPanel(new GridLayout(2, 2, 20, 20));
             panel.setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
@@ -40,6 +52,13 @@ public class ManagementGUI extends JFrame{
 
             return panel;
     }
+
+    /**
+     * Βοηθητική μέθοδος για τις κατηγορίες αυτοκίνητα, πελάτες, υπάλληλοι, ενοικίαση που δημιουργεί τα πλαίσια στη διεπαφή
+     * @param title Τίτος πλαισίου
+     * @param action Η αντίστοιχη ενέργεια που θέλουμε
+     * @return Πάνελ
+     */
     private JPanel createDashboardCard(String title, java.awt.event.ActionListener action) {
         JButton card = new JButton(title);
         card.setFont(new Font("Arial", Font.BOLD, 14));

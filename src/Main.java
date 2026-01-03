@@ -1,9 +1,7 @@
 import api.model.Car;
 import api.services.AllCars;
 import api.services.AllClients;
-import api.services.CarHelper;
-import gui.CarsFrame;
-import gui.ClientFrame;
+
 import gui.ManagementGUI;
 
 import javax.swing.*;
@@ -17,8 +15,6 @@ public class Main extends JFrame{
         AllCars allCars=new AllCars();
         ManagementGUI managementGUI=new ManagementGUI(allCars,allClients);
 
-       // ClientFrame clientFrame=new ClientFrame(allClients);
-       // clientFrame.setVisible(true);
 
     }
 }

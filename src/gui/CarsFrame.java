@@ -118,17 +118,17 @@ public class CarsFrame extends JFrame {
     private void refreshTable() {
         tableModel.setRowCount(0);
         for (Car car : allCars.getAllCars().values()) {
-            tableModel.addRow(new Object[]{
-                    car.getId(),
-                    car.getPlate(),
-                    car.getCarBrand(),
-                    car.getType(),
-                    car.getModel(),
-                    car.getYear(),
-                    car.getColor(),
-                    car.getSituation()
-            });
-        }
+                tableModel.addRow(new Object[]{
+                        car.getId(),
+                        car.getPlate(),
+                        car.getCarBrand(),
+                        car.getType(),
+                        car.getModel(),
+                        car.getYear(),
+                        car.getColor(),
+                        car.getSituation()
+                });
+            }
     }
 
 

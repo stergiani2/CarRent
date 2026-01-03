@@ -30,7 +30,7 @@ public class ClientDialog extends JDialog {
      * @param existingClient Πελάτης που θα προσθέσουμε
      */
     public ClientDialog(JFrame parent,Client existingClient,AllClients allClients){
-        super(parent, existingClient == null ? "Προσθήκη Πελάτη" : "Επεξεργασία Πελάτη", true);
+        super(parent, existingClient == null ? "Προσθήκη Πελάτη" : "Επεξεργασία", true);
         this.client=existingClient;
         this.allClients=allClients;
         initDialog();
@@ -49,16 +49,16 @@ public class ClientDialog extends JDialog {
         GridBagConstraints gbc=new GridBagConstraints();
         gbc.insets=new Insets(5,5,5,5);
         gbc.fill=GridBagConstraints.HORIZONTAL;
+        gbc.weightx=1.0;
 
         gbc.gridx=0;
         gbc.gridy=0;
         mainPanel.add(new JLabel("ΑΦΜ:"),gbc);
 
         gbc.gridx=1;
-        AFMField=new JTextField(8);
+        AFMField=new JTextField(9);
         if(client!=null){
             AFMField.setText(client.getAFM());
-            AFMField.setEditable(false);
         }
         mainPanel.add(AFMField, gbc);
 
@@ -78,7 +78,7 @@ public class ClientDialog extends JDialog {
         mainPanel.add(new JLabel("Επώνυμο:"),gbc);
 
         gbc.gridx=1;
-        lastNameField=new JTextField(20);
+        lastNameField=new JTextField(30);
         if(client!=null){
             lastNameField.setText(client.getLastName());
         }
@@ -90,7 +90,7 @@ public class ClientDialog extends JDialog {
         mainPanel.add(new JLabel("Τηλέφωνο:"),gbc);
 
         gbc.gridx=1;
-        phoneField=new JTextField(20);
+        phoneField=new JTextField(12);
         if(client!=null){
             phoneField.setText(client.getPhone());
         }
@@ -101,7 +101,7 @@ public class ClientDialog extends JDialog {
         mainPanel.add(new JLabel("Email:"),gbc);
 
         gbc.gridx=1;
-        emailField=new JTextField(20);
+        emailField=new JTextField(30);
         if(client!=null){
             emailField.setText(client.getEmail());
         }
@@ -137,12 +137,15 @@ public class ClientDialog extends JDialog {
         }
         if(lastNameField.getText().trim().isEmpty()){
             showError("Η επώνυμο είναι υποχρεωτικό πεδίο!");
+            return;
         }
         if (phoneField.getText().trim().isEmpty()){
             showError("Το τηλέφωνο είναι υποχρεωτικό πεδίο!");
+            return;
         }
         if(emailField.getText().trim().isEmpty()){
             showError("Το email είναι υποχρεωτικό πεδίο!");
+            return;
         }
         client=new Client(AFMField.getText().trim(),firstNameField.getText().trim(),lastNameField.getText().trim(),phoneField.getText().trim(),emailField.getText().trim());
         saved=true;

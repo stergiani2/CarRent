@@ -1,5 +1,6 @@
 package gui;
 
+import api.model.Car;
 import api.model.Client;
 import api.services.AllClients;
 import api.services.ClientHelper;
@@ -8,6 +9,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.io.*;
+import java.util.Objects;
 
 /**
  * Κλάση αυτή δημιουργεί πλαίσιο αλληλεπίδρασης με τον χρήστη για τη διαχείριση πελατών, όπως προσθήκη πελάτη, επεξεργασία, ανανέωση,
@@ -59,7 +61,6 @@ public class ClientFrame extends JFrame {
     private void initComponents() {
         setLayout(new BorderLayout(10, 10));
 
-        // Πάνελ μενού
         JMenuBar menuBar = new JMenuBar();
         JMenu fileMenu = new JMenu("Αρχείο");
 
@@ -70,7 +71,6 @@ public class ClientFrame extends JFrame {
         menuBar.add(fileMenu);
         setJMenuBar(menuBar);
 
-        // Πάνελ αναζήτησης
         JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         searchPanel.add(new JLabel("Αναζήτηση:"));
         searchComboBox = new JComboBox<>(new String[]{"ΑΦΜ","Όνομα","Επώνυμο","Τηλέφωνο","Email"});
@@ -97,7 +97,6 @@ public class ClientFrame extends JFrame {
         JScrollPane scrollPane = new JScrollPane(clientsTable);
         add(scrollPane, BorderLayout.CENTER);
 
-        // Κουμπιά διαχείρισης
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
 
         JButton addButton = new JButton("Προσθήκη Πελάτη");
@@ -128,7 +127,6 @@ public class ClientFrame extends JFrame {
                     client.getEmail()};
             tableModel.addRow(rowData);
         }
-        tableModel.fireTableDataChanged();
     }
 
     /**
@@ -221,7 +219,6 @@ public class ClientFrame extends JFrame {
             JOptionPane.showMessageDialog(this, "Παρακαλώ επιλέξτε έναν πελάτη για επεξεργασία.", "Προειδοποίηση", JOptionPane.WARNING_MESSAGE);
             return;
         }
-
         String clientAFM = (String) tableModel.getValueAt(selectedRow, 0);
         Client selectedClient = allClients.searchClientByAFM(clientAFM);
 
@@ -229,19 +226,17 @@ public class ClientFrame extends JFrame {
         dialog.setVisible(true);
         if(dialog.isSaved()){
             Client updatedClient=dialog.getClient();
-            if (!clientAFM.equals(updatedClient.getAFM())) {
-                System.out.println("To ΑΦΜ δεν αλλάζει!");
-                return;
-            }
+            System.out.println(updatedClient.getAFM());
+            allClients.getAllClients().remove(selectedClient);
             allClients.getAllClients().add(updatedClient);
+            clientHelper.saveClientsToFile();
             refreshTable();
             SwingUtilities.invokeLater(() -> {
                 clientsTable.revalidate();
                 clientsTable.repaint();
             });
         }
-        clientHelper.saveClientsToFile();
-        refreshTable();
+
     }
 
 

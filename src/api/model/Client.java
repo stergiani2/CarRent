@@ -81,16 +81,16 @@ public class Client {
 
     /**
      * Θέτει το όνομα
-     * @param first_name Το όνομα του πελάτη
+     * @param firstName Το όνομα του πελάτη
      */
-    public void setFirstName(String first_name) {
+    public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
     /**
      * Θέτει το επώνυμο του πελάτη
-     * @param last_name Το επώνυμο του πελάτη
+     * @param lastName Το επώνυμο του πελάτη
      */
-    public void setLastName(String last_name) {
+    public void setLastName(String lastName) {
         this.lastName = lastName;
     }
     /**
