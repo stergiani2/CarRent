@@ -3,6 +3,8 @@ import javax.swing.*;
 
 import api.services.AllCars;
 import api.services.AllClients;
+import api.services.AuthService;
+import api.services.RentalService;
 
 
 import java.awt.*;
@@ -12,15 +14,19 @@ public class ManagementGUI extends JFrame{
     private AllCars allCars;
     //Δομή AllClients
     private AllClients allClients;
+    private RentalService rentalService;
+    private AuthService authService;
 
     /**
      * Παράθυρο γενικής διαχείρισης
      * @param allCars Αποθηκεύει όλα τα αυτοκίνητα
      * @param allClients Αποθηκεύει όλους τους πελάτες
      */
-    public ManagementGUI(AllCars allCars,AllClients allClients){
+    public ManagementGUI(AllCars allCars, AllClients allClients, RentalService rentalService,AuthService authService){
         this.allCars=allCars;
         this.allClients=allClients;
+        this.rentalService=rentalService;
+        this.authService=authService;
         initComponents();
         setTitle("Σύστημα Διαχείρισης");
         setSize(800,600);
@@ -49,6 +55,10 @@ public class ManagementGUI extends JFrame{
             panel.add(createDashboardCard("Αυτοκίνητα",e -> new CarsFrame(allCars).setVisible(true)));
 
             panel.add(createDashboardCard("Πελάτες",e -> new ClientFrame(allClients).setVisible(true)));
+
+            panel.add(createDashboardCard("Ενοικίαση",e->new RentalsFrame(rentalService,allCars,allClients,authService).setVisible(true)));
+
+            //panel.add(createDashboardCard("Υπάλληλοι",e->new  );
 
             return panel;
     }
