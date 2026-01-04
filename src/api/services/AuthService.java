@@ -59,30 +59,4 @@ public class AuthService {
     public Employee getCurrentUser() {
         return currentUser;
     }
-
-    /**
-     * @return όλους τους υπαλλήλους
-     */
-    public HashMap<String, Employee> getAllEmployees() {return allEmployees;}
-
-    /**
-     * Προσθήκη νέου υπαλλήλου
-     */
-    public boolean addEmployee(Employee employee) {
-        if (employee == null || allEmployees.containsKey(employee.getUsername())) {
-            return false;
-        }
-        allEmployees.put(employee.getUsername(), employee);
-        return true;
-    }
-    /**
-     * Διαγραφή υπαλλήλου
-     */
-    public boolean removeEmployee(String username) {
-        if(!allEmployees.containsKey(username)){
-            return false;
-        }
-        allEmployees.remove(username);
-        return true;
-    }
 }
