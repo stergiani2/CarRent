@@ -17,6 +17,11 @@ import java.time.LocalDate;
  */
 public class RentalsFrame extends JFrame {
 
+    private RentalService rentalService;
+    private AllCars allCars;
+    private AllClients allClients;
+    private AuthService authService;
+
     /**
      * Κατασκευαστής παραθύρου ενοικιάσεων.
      *
@@ -29,9 +34,13 @@ public class RentalsFrame extends JFrame {
                         AllCars allCars,
                         AllClients allClients,
                         AuthService authService) {
+        this.rentalService = rentalService;
+        this.allCars = allCars;
+        this.allClients = allClients;
+        this.authService = authService;
 
         setTitle("Ενοικιάσεις");
-        setSize(400, 300);
+        setSize(500, 300);
         setLocationRelativeTo(null);
 
         //ComboBox επιλογής αυτοκινήτου
@@ -52,8 +61,11 @@ public class RentalsFrame extends JFrame {
 
             if (client != null) {
                 rentalService.createRental(
-                        car, client, authService.getCurrentUser(),
-                        LocalDate.now(), LocalDate.now().plusDays(3)
+                        car,
+                        client,
+                        authService.getCurrentUser(),
+                        LocalDate.now(),
+                        LocalDate.now().plusDays(3)
                 );
                 JOptionPane.showMessageDialog(this, "Η ενοικίαση δημιουργήθηκε");
             }
@@ -65,5 +77,13 @@ public class RentalsFrame extends JFrame {
 
         setVisible(true);
     }
+    //Προβολή ιστορικού ενοικιάσεων
+    //HashSet<Rental> rentalsForClient = rentalService.getRentalByClient(client);
+    //for(Rental r : rentalsForClient) {
+    //    System.out.println("Πελάτης: " + r.getClient().getFullName() +
+    //                       ", Υπάλληλος: " + r.getEmployee().getFirstName() + " " + r.getEmployee().getLastName() +
+    //                       ", Αυτοκίνητο: " + r.getCar().getModel() +
+    //                       ", Από: " + r.getStartDate() + " έως: " + r.getEndDate());
+    //}
 }
 

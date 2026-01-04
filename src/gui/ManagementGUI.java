@@ -58,7 +58,7 @@ public class ManagementGUI extends JFrame{
 
             panel.add(createDashboardCard("Ενοικίαση",e->new RentalsFrame(rentalService,allCars,allClients,authService).setVisible(true)));
 
-            //panel.add(createDashboardCard("Υπάλληλοι",e->new  );
+            panel.add(createDashboardCard("Υπάλληλοι",e->new EmployeeFrame(authService).setVisible(true)));
 
             return panel;
     }

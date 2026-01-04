@@ -1,11 +1,12 @@
 
 import api.model.Employee;
 import api.services.*;
+import gui.EmployeeLoginFrame;
 import gui.ManagementGUI;
 import javax.swing.*;
 import java.io.*;
 import java.util.HashMap;
-import java.util.HashSet;
+
 
 
 public class Main extends JFrame{
@@ -19,6 +20,11 @@ public class Main extends JFrame{
             allEmployees=userHelper.readUsersFromCSV();
             AuthService authService=new AuthService(allEmployees);
             ManagementGUI managementGUI=new ManagementGUI(allCars,allClients,rentalService,authService);
+            // Ανοίγει το Login και μετά το ManagementGUI
+            new EmployeeLoginFrame(authService, () ->
+                    new ManagementGUI(allCars, allClients, rentalService, authService)
+            );
+
 
         }catch (Exception e){
             JOptionPane.showMessageDialog(
@@ -29,8 +35,5 @@ public class Main extends JFrame{
             );
             return;
         }
-
-
-
     }
 }
