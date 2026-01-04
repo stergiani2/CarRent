@@ -4,7 +4,7 @@ import api.model.Employee;
 import java.util.HashMap;
 
 /**
- * Η κλάση AuthService διαχειρίζεται την αυθεντικοποπίηση των υπαλλήλων.
+ * Η κλάση AuthService διαχειρίζεται την αυθεντικοποποίηση των υπαλλήλων.
  * Ελέγχει τα στοιχεία σύνδεσης (username & password) και
  * κρατά πληροφορία για τον χρήστη που είναι συνδεδεμένος στο σύστημα.
  *
@@ -59,4 +59,29 @@ public class AuthService {
     public Employee getCurrentUser() {
         return currentUser;
     }
+    /**
+     * @return Όλοι οι υπάλληλοι του συστήματος
+     */
+    public HashMap<String, Employee> getAllEmployees() {
+        return allEmployees;
+    }
+
+    /**
+     * Προσθέτει νέο υπάλληλο στο σύστημα
+     *
+     * @param employee Ο νέος υπάλληλος
+     */
+    public void addEmployee(Employee employee) {
+        allEmployees.put(employee.getUsername(), employee);
+    }
+
+    /**
+     * Διαγράφει υπάλληλο με βάση το username
+     *
+     * @param username Το username του υπαλλήλου
+     */
+    public void removeEmployee(String username) {
+        allEmployees.remove(username);
+    }
+
 }

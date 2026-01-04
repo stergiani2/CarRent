@@ -10,10 +10,10 @@ import java.awt.*;
  */
 public class EmployeeLoginFrame extends JFrame {
 
-    private AuthService authManager;
+    private AuthService authService;
 
-    public EmployeeLoginFrame(AuthService authManager,Runnable onLoginSuccess) {
-        this.authManager = authManager;
+    public EmployeeLoginFrame(AuthService authService,Runnable onLoginSuccess) {
+        this.authService = authService;
 
         setTitle("Σύνδεση Υπαλλήλου");
         setSize(350, 200);
@@ -36,13 +36,16 @@ public class EmployeeLoginFrame extends JFrame {
             String username = usernameField.getText();
             String password = new String(passwordField.getPassword());
 
-            if (authManager.login(username, password)) {
-                JOptionPane.showMessageDialog(this, "Σύνδεση επιτυχής!");
-                // εδώ ανοίγεις το ManagementGUI
-                // π.χ. new ManagementGUI(...);
-                dispose();
+            if (authService.login(username, password)) {
+                //JOptionPane.showMessageDialog(this, "Σύνδεση επιτυχής!");
+
+                dispose(); //Κλείνει το Login
+                onLoginSuccess.run(); //Ανοίγει το ManagementGUI
             } else {
-                JOptionPane.showMessageDialog(this, "Λάθος username ή password", "Σφάλμα", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this,
+                        "Λάθος username ή password",
+                        "Σφάλμα",
+                        JOptionPane.ERROR_MESSAGE);
             }
         });
 
