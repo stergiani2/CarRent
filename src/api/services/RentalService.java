@@ -4,6 +4,7 @@ import api.model.Rental;
 import api.model.Car;
 import api.model.Client;
 import api.model.Employee;
+import gui.ClientFrame;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -48,6 +49,8 @@ public class RentalService {
         car.setSituation("Ενοικιασμένο");
         Rental rental=new Rental(car,client,employee,startDate,endDate);
         rentals.add(rental);
+
+
         return rental;
     }
 
@@ -57,7 +60,9 @@ public class RentalService {
      * @param rental Η ενοικίαση
      */
     public void completeRental(Rental rental){
+
         rental.completeRental();
+
     }
 
     /**
