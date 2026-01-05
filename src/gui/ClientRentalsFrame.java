@@ -16,14 +16,16 @@ public class ClientRentalsFrame extends JFrame {
         setSize(700, 400);
         setLocationRelativeTo(null);
 
+        //Δημιουργούμε το μοντέλο του πίνακα
         DefaultTableModel model = new DefaultTableModel(
                 new String[]{"Αυτοκίνητο", "Από", "Έως", "Υπάλληλος"}, 0
         );
 
+        //Παίρνουμε τις ενοικιάσεις του πελάτη
         Set<Rental> rentals = rentalService.getRentalByClient(client);
         for (Rental r : rentals) {
             model.addRow(new Object[]{
-                    r.getCar().getBrand() + " " + r.getCar().getModel(),
+                    r.getCar().getModel() + " " + r.getCar().getModel(),
                     r.getStartDate(),
                     r.getEndDate(),
                     r.getEmployee().getFirstName() + " " + r.getEmployee().getLastName()

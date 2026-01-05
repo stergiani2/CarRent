@@ -1,5 +1,6 @@
 package api.model;
 
+import java.util.Objects;
 import java.time.LocalDate;
 
 /**

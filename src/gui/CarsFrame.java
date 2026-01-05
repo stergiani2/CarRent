@@ -42,7 +42,7 @@ public class CarsFrame extends JFrame {
             carHelper.readFromFileCars("vehicles_with_plates.csv");
             refreshTable();
         }catch (Exception e){
-            JOptionPane.showMessageDialog(this, "Το αρχείο δεν άνοιξε!", "Σφάλμα", JOptionPane.ERROR_MESSAGE);
+
         }
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

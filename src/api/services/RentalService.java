@@ -1,10 +1,10 @@
 package api.services;
 
 import api.model.Rental;
+
 import api.model.Car;
 import api.model.Client;
 import api.model.Employee;
-import gui.ClientFrame;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -20,14 +20,15 @@ public class RentalService {
     //Σύνολο με όλες τις ενοικιάσεις
     private HashSet<Rental> rentals;
     //Βοηθητική κλάση για αποθήκευση
-    private RentalHelper helper = new RentalHelper();
+    private RentalHelper helper;
 
     /**
      * Κατασκευαστής
      */
     public RentalService() {
         helper = new RentalHelper();
-        rentals = helper.loadRentalsFromBinary();
+        // Φόρτωση ενοικιάσεων από binary
+        rentals=helper.loadRentalsFromBinary();
     }
 
 
@@ -50,7 +51,7 @@ public class RentalService {
         Rental rental=new Rental(car,client,employee,startDate,endDate);
         rentals.add(rental);
 
-
+        helper.saveRentalsToBinary(rentals); // αποθηκεύουμε αμέσως
         return rental;
     }
 
@@ -62,7 +63,7 @@ public class RentalService {
     public void completeRental(Rental rental){
 
         rental.completeRental();
-
+        helper.saveRentalsToBinary(rentals); // αποθηκεύουμε μετά την ολοκλήρωση
     }
 
     /**

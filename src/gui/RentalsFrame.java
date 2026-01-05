@@ -6,6 +6,7 @@ import api.services.*;
 import javax.swing.*;
 import java.awt.*;
 import java.time.LocalDate;
+import java.util.HashSet;
 
 /**
  * Παράθυρο δημιουργίας ενοικίασης.
@@ -77,13 +78,6 @@ public class RentalsFrame extends JFrame {
 
         setVisible(true);
     }
-    //Προβολή ιστορικού ενοικιάσεων
-    //HashSet<Rental> rentalsForClient = rentalService.getRentalByClient(client);
-    //for(Rental r : rentalsForClient) {
-    //    System.out.println("Πελάτης: " + r.getClient().getFullName() +
-    //                       ", Υπάλληλος: " + r.getEmployee().getFirstName() + " " + r.getEmployee().getLastName() +
-    //                       ", Αυτοκίνητο: " + r.getCar().getModel() +
-    //                       ", Από: " + r.getStartDate() + " έως: " + r.getEndDate());
-    //}
+
 }
 

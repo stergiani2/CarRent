@@ -2,6 +2,7 @@ package api.services;
 
 import api.model.Employee;
 import java.util.HashMap;
+import java.io.IOException;
 
 /**
  * Η κλάση AuthService διαχειρίζεται την αυθεντικοποποίηση των υπαλλήλων.
@@ -16,13 +17,14 @@ public class AuthService {
     private HashMap<String, Employee> allEmployees;
     //Ο υπάλληλος που είναι συνδεδεμένος στο σύστημα
     private Employee currentUser; // Ο χρήστης που είναι συνδεδεμένος [cite: 90]
-
+    private UserHelper helper=new UserHelper();
     /**
      * Κατασκευαστής της κλάσης.
      *
      * @param employees Όλοι οι υπάλληλοι του συστήματος
      */
     public AuthService(HashMap<String, Employee> employees) {
+
         this.allEmployees = employees;
     }
 
@@ -50,7 +52,7 @@ public class AuthService {
      * Αποσυνδέει τον τρέχοντα χρήστη.
      */
     public void logout() {
-        this.currentUser = null;
+        currentUser = null;
     }
 
     /**
@@ -67,7 +69,11 @@ public class AuthService {
      */
     public void addEmployee(Employee employee) {
         allEmployees.put(employee.getUsername(), employee);
-        //UserHelper.saveUsersToCSV(allEmployees);
+        try {
+            helper.saveUsersToBinary(allEmployees); // αποθήκευση αμέσως
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -77,7 +83,11 @@ public class AuthService {
      */
     public void removeEmployee(String username) {
         allEmployees.remove(username);
-        //UserHelper.saveUsersToCSV(allEmployees);
+        try {
+            helper.saveUsersToBinary(allEmployees); // αποθήκευση αμέσως
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
     /**
      * @return Όλοι οι υπάλληλοι του συστήματος
@@ -87,3 +97,4 @@ public class AuthService {
     }
 
 }
+

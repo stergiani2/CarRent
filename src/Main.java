@@ -1,8 +1,11 @@
-
+import api.model.Car;
+import api.model.Client;
 import api.model.Employee;
 import api.services.*;
+
 import gui.EmployeeLoginFrame;
 import gui.ManagementGUI;
+
 import javax.swing.*;
 import java.io.*;
 import java.util.HashMap;
@@ -14,7 +17,7 @@ public class Main extends JFrame{
         AllClients allClients = new AllClients();
         //Client c1 = new Client("123456789", "Γιάννης", "Παπαδόπουλος", "6900000001");
         //Client c2 = new Client("987654321", "Μαρία", "Ιωάννου", "6900000002");
-        //
+
         //allClients.addClient(c1);
         //allClients.addClient(c2);
 

@@ -38,7 +38,7 @@ public class MainFrame extends JFrame {
 
         //Κουμπί μετάβασης στη διαχείριση πελατών
         JButton clientsBtn = new JButton("Πελάτες");
-        clientsBtn.addActionListener(e -> new ClientFrame(allClients));
+        clientsBtn.addActionListener(e -> new ClientFrame(allClients,rentalService));
 
         //Κουμπί μετάβασης στις ενοικιάσεις
         JButton rentalsBtn = new JButton("Ενοικιάσεις");
