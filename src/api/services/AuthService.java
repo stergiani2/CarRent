@@ -59,12 +59,6 @@ public class AuthService {
     public Employee getCurrentUser() {
         return currentUser;
     }
-    /**
-     * @return Όλοι οι υπάλληλοι του συστήματος
-     */
-    public HashMap<String, Employee> getAllEmployees() {
-        return allEmployees;
-    }
 
     /**
      * Προσθέτει νέο υπάλληλο στο σύστημα
@@ -73,6 +67,7 @@ public class AuthService {
      */
     public void addEmployee(Employee employee) {
         allEmployees.put(employee.getUsername(), employee);
+        //UserHelper.saveUsersToCSV(allEmployees);
     }
 
     /**
@@ -82,6 +77,13 @@ public class AuthService {
      */
     public void removeEmployee(String username) {
         allEmployees.remove(username);
+        //UserHelper.saveUsersToCSV(allEmployees);
+    }
+    /**
+     * @return Όλοι οι υπάλληλοι του συστήματος
+     */
+    public HashMap<String, Employee> getAllEmployees() {
+        return allEmployees;
     }
 
 }

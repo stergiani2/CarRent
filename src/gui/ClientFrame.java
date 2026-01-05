@@ -4,6 +4,7 @@ import api.model.Car;
 import api.model.Client;
 import api.services.AllClients;
 import api.services.ClientHelper;
+import api.services.RentalService;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -31,13 +32,14 @@ public class ClientFrame extends JFrame {
     private JComboBox<String> searchComboBox;
     //Δομή ClientHelper
     private ClientHelper clientHelper;
-
+    private RentalService rentalService;
     /**
      * Κατασκευαστής πλαισίου με τα απαραίτητα στοιχεία
      * @param allClients Δομή AllClients για την αποθήκευση όλων των πελατών
      */
-    public ClientFrame(AllClients allClients) {
+    public ClientFrame(AllClients allClients,RentalService rentalService) {
         this.allClients = allClients;
+        this.rentalService = rentalService;
         clientHelper=new ClientHelper(allClients);
         initComponents();
         setTitle("Διαχείριση πελατών");
@@ -238,9 +240,4 @@ public class ClientFrame extends JFrame {
         }
 
     }
-
-
-
-
-
 }
