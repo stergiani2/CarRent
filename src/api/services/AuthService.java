@@ -2,7 +2,7 @@ package api.services;
 
 import api.model.Employee;
 import java.util.HashMap;
-import java.io.IOException;
+
 
 /**
  * Η κλάση AuthService διαχειρίζεται την αυθεντικοποποίηση των υπαλλήλων.
@@ -16,7 +16,7 @@ public class AuthService {
     //Πίνακας κατακερματισμού με όλους τους υπαλλήλους (κλειδί: username)
     private HashMap<String, Employee> allEmployees;
     //Ο υπάλληλος που είναι συνδεδεμένος στο σύστημα
-    private Employee currentUser; // Ο χρήστης που είναι συνδεδεμένος [cite: 90]
+    private Employee currentUser; // Ο χρήστης που είναι συνδεδεμένος
     private UserHelper helper=new UserHelper();
     /**
      * Κατασκευαστής της κλάσης.
@@ -71,7 +71,7 @@ public class AuthService {
         allEmployees.put(employee.getUsername(), employee);
         try {
             helper.saveUsersToBinary(allEmployees); // αποθήκευση αμέσως
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

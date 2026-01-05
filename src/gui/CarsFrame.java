@@ -267,8 +267,4 @@ public class CarsFrame extends JFrame {
         }
     }
 
-
-
-
-
 }

@@ -17,6 +17,7 @@ import java.util.HashSet;
  * @version 0.1 (2025.12.30)
  */
 public class RentalService {
+
     //Σύνολο με όλες τις ενοικιάσεις
     private HashSet<Rental> rentals;
     //Βοηθητική κλάση για αποθήκευση
