@@ -108,6 +108,10 @@ public class ClientFrame extends JFrame {
         JButton editButton = new JButton("Επεξεργασία");
         editButton.addActionListener(e -> editClient());
         buttonPanel.add(editButton);
+        JButton rentalsButton = new JButton("Ιστορικό Ενοικιάσεων");
+        rentalsButton.addActionListener(e -> showClientRentals());
+        buttonPanel.add(rentalsButton);
+
 
         add(buttonPanel, BorderLayout.SOUTH);
 
@@ -240,4 +244,20 @@ public class ClientFrame extends JFrame {
         }
 
     }
+    private void showClientRentals() {
+        int selectedRow = clientsTable.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this,
+                    "Επιλέξτε έναν πελάτη",
+                    "Προειδοποίηση",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        String afm = (String) tableModel.getValueAt(selectedRow, 0);
+        Client client = allClients.searchClientByAFM(afm);
+
+        new ClientRentalsFrame(client, rentalService);
+    }
+
 }

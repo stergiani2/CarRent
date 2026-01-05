@@ -25,8 +25,10 @@ public class RentalService {
      * Κατασκευαστής
      */
     public RentalService() {
-        rentals = new HashSet<>();
+        helper = new RentalHelper();
+        rentals = helper.loadRentalsFromBinary();
     }
+
 
     /**
      * Δημιουργεί μία νέα ενοικίαση.
