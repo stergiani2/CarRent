@@ -98,6 +98,7 @@ public class RentalService {
         }
         return result;
     }
+    //Επιστρέφει όλες τις ενοικιάσεις του συστήματος
     public java.util.HashSet<Rental> getAllRentals() {
         return this.rentals;
     }
