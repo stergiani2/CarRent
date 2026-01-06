@@ -1,5 +1,3 @@
-import api.model.Car;
-import api.model.Client;
 import api.model.Employee;
 import api.services.*;
 
@@ -10,39 +8,61 @@ import javax.swing.*;
 import java.io.*;
 import java.util.HashMap;
 
+/**
+ * Κύρια κλάση εκκίνησης του προγράμματος.
+ * Δημιουργεί τις δομές δεδομένων (πελάτες, αυτοκίνητα, υπαλλήλους)
+ * και ανοίγει πρώτα το παράθυρο login υπαλλήλου.
+ * Μετά τη σωστή είσοδο, ανοίγει το παράθυρο διαχείρισης (ManagementGUI).
+ *
+ * Αυτή η κλάση είναι η "είσοδος" της εφαρμογής.
+ *
+ * @author Αλεξάνδρα Σακελλαριάδη, Στεργιανή Καραγιώργου
+ * @version 0.1(2026.01.05)
+ */
+public class Main extends JFrame {
 
-
-public class Main extends JFrame{
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args)  {
+        // 1. Αρχικοποίηση Helpers και Services
+        UserHelper userHelper = new UserHelper();
+        AllCars allCars = new AllCars();
         AllClients allClients = new AllClients();
-        //Client c1 = new Client("123456789", "Γιάννης", "Παπαδόπουλος", "6900000001");
-        //Client c2 = new Client("987654321", "Μαρία", "Ιωάννου", "6900000002");
+        RentalService rentalService = new RentalService();
 
-        //allClients.addClient(c1);
-        //allClients.addClient(c2);
-
-        RentalService rentalService=new RentalService();
-        AllCars allCars=new AllCars();
-        UserHelper userHelper=new UserHelper();
-        HashMap<String,Employee> allEmployees;
-        try {
-            allEmployees=userHelper.readUsersFromCSV();
-            AuthService authService=new AuthService(allEmployees);
-            ManagementGUI managementGUI=new ManagementGUI(allCars,allClients,rentalService,authService);
-            // Ανοίγει το Login και μετά το ManagementGUI
-            new EmployeeLoginFrame(authService, () ->
-                    new ManagementGUI(allCars, allClients, rentalService, authService)
-            );
-
-
-        }catch (Exception e){
-            JOptionPane.showMessageDialog(
-                    null,
-                    "Σφάλμα φόρτωσης χρηστών",
-                    "Σφάλμα",
-                    JOptionPane.ERROR_MESSAGE
-            );
-            return;
+        // 2. Φόρτωση Υπαλλήλων (Binary ή CSV)
+        HashMap<String, Employee> employees = userHelper.loadUsersFromBinary();
+        if (employees == null || employees.isEmpty()) {
+            try {
+                employees = userHelper.readUsersFromCSV();
+                userHelper.saveUsersToBinary(employees); // Αποθήκευση για την επόμενη φορά
+            } catch (Exception e) {
+                employees = new HashMap<>();
+            }
         }
+        AuthService authService = new AuthService(employees);
+
+        // 3. Φόρτωση Αυτοκινήτων και Πελατών
+        // Εδώ καλό είναι να προσθέσετε παρόμοιο έλεγχο binary και για τα αυτοκίνητα
+        CarHelper carHelper = new CarHelper(allCars);
+        try {
+            carHelper.readFromFileCars("vehicles_with_plates.csv");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        ClientHelper clientHelper = new ClientHelper(allClients);
+        try {
+            clientHelper.loadClientsFromFile();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // 4. Εκκίνηση GUI
+        SwingUtilities.invokeLater(() -> {
+            new EmployeeLoginFrame(authService, () -> {
+                new ManagementGUI(allCars, allClients, rentalService, authService);
+            });
+        });
+
     }
 }
+

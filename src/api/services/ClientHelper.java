@@ -2,10 +2,18 @@ package api.services;
 
 import api.model.Client;
 
-import javax.swing.*;
-import java.awt.*;
 import java.io.*;
 
+/**
+ * Η κλάση ClientHelper διαχειρίζεται την αποθήκευση και φόρτωση των πελατών
+ * από απλά αρχεία κειμένου. Παρέχει δυνατότητα:
+ *  - φόρτωσης πελατών από αρχείο
+ *  - αποθήκευσης πελατών σε αρχείο
+ *  - ανάγνωσης και τροποποίησης του ονόματος του αρχείου
+ *
+ * Κάθε γραμμή στο αρχείο αναμένεται να έχει τη μορφή:
+ * AFM,FirstName,LastName,Phone,Email
+ */
 public class ClientHelper {
     //Αρχείο για αποθήκευση των πελατών
     private String File = "Clients.txt";

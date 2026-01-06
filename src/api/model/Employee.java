@@ -1,7 +1,5 @@
 package api.model;
-
-import java.util.Objects;
-
+import java.io.Serializable;
 /**
  * Η κλάση Employee αντιπροσωπεύει έναν υπάλληλο της εταιρίας ενοικίασης αυτοκινήτων.
  * Οι υπάλληλοι αποτελούν τους χρήστες του συστήματος και έχουν πρόσβαση στην εφαρμογή
@@ -12,8 +10,9 @@ import java.util.Objects;
  * @author Καραγιώργου Στεργιανή
  * @version 0.1 (2025.12.28)
  */
-public class Employee {
+public class Employee implements Serializable {
 
+    private static final long serialVersionUID = 1L;
     //Όνομα υπαλλήλου
     private String firstName;
     //Επώνυμο υπαλλήλου

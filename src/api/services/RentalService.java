@@ -98,4 +98,9 @@ public class RentalService {
         }
         return result;
     }
+    public java.util.HashSet<Rental> getAllRentals() {
+        return this.rentals;
+        // Υποθέτω ότι η μεταβλητή που κρατάει τις ενοικιάσεις
+        // μέσα στη RentalService λέγεται "rentals"
+    }
 }

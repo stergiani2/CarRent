@@ -1,6 +1,6 @@
 package gui;
 
-import api.model.Car;
+
 import api.model.Client;
 import api.services.AllClients;
 import api.services.ClientHelper;
@@ -10,7 +10,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.io.*;
-import java.util.Objects;
+
 
 /**
  * Κλάση αυτή δημιουργεί πλαίσιο αλληλεπίδρασης με τον χρήστη για τη διαχείριση πελατών, όπως προσθήκη πελάτη, επεξεργασία, ανανέωση,

@@ -2,6 +2,7 @@ package gui;
 
 import api.model.Employee;
 import api.services.AuthService;
+import api.services.UserHelper;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -17,6 +18,7 @@ import java.awt.*;
 public class EmployeeFrame extends JFrame {
 
     private AuthService authService;
+    private UserHelper userHelper;
     private JTable table;
     private DefaultTableModel model;
 
@@ -27,6 +29,8 @@ public class EmployeeFrame extends JFrame {
      */
     public EmployeeFrame(AuthService authService) {
         this.authService = authService;
+        this.userHelper = new UserHelper();
+
 
         setTitle("Διαχείριση Υπαλλήλων");
         setSize(600, 400);
@@ -34,6 +38,7 @@ public class EmployeeFrame extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         initComponents();
+
         refreshTable();
 
         setVisible(true);
@@ -127,8 +132,19 @@ public class EmployeeFrame extends JFrame {
             );
 
             authService.addEmployee(emp);
+            // Αποθήκευση σε αρχείο
+            try {
+                userHelper.saveUsersToBinary(authService.getAllEmployees());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(this,
+                        "Σφάλμα κατά την αποθήκευση των υπαλλήλων",
+                        "Σφάλμα", JOptionPane.ERROR_MESSAGE);
+            }
+
             refreshTable();
         }
+
     }
 
     /**
@@ -155,6 +171,15 @@ public class EmployeeFrame extends JFrame {
 
         if (confirm == JOptionPane.YES_OPTION) {
             authService.removeEmployee(username);
+            // Αποθήκευση σε αρχείο
+            try {
+                userHelper.saveUsersToBinary(authService.getAllEmployees());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(this,
+                        "Σφάλμα κατά την αποθήκευση των υπαλλήλων",
+                        "Σφάλμα", JOptionPane.ERROR_MESSAGE);
+            }
             refreshTable();
         }
     }

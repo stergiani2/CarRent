@@ -1,6 +1,5 @@
 package api.model;
-
-import java.util.Objects;
+import java.io.Serializable;
 import java.time.LocalDate;
 
 /**
@@ -13,8 +12,9 @@ import java.time.LocalDate;
  * @author Καραγιώργου Στεργιανή
  * @version 0.1 (2025.12.29)
  */
-public class Rental {
+public class Rental implements Serializable {
 
+    private static final long serialVersionUID = 1L;
     //Μετρητής για αυτόματη παραγωγή μοναδικών κωδικών ενοικίασης
     private static int counter=1;
     //Κωδικός ενοικίασης

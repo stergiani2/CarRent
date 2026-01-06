@@ -2,8 +2,6 @@ package api.services;
 import api.model.Car;
 
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Κλάση που δημιουργεί έναν πίνακα κατακερματισμού (με κλειδί το id του αυτοκινήτου και τιμή το αυτοκίνητο)
