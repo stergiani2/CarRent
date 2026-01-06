@@ -45,6 +45,7 @@ public class Main extends JFrame {
 
         //  Φόρτωση Αυτοκινήτων
         CarHelper carHelper = new CarHelper(allCars);
+
         try {
             carHelper.readFromFileCars("vehicles_with_plates.csv");
 

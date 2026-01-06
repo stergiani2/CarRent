@@ -43,6 +43,7 @@ public class CarsFrame extends JFrame {
             refreshTable();
         }catch (Exception e){}
 
+
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setVisible(true);
