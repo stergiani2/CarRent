@@ -14,7 +14,7 @@ import java.time.LocalDate;
  */
 public class Rental implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+
     //Μετρητής για αυτόματη παραγωγή μοναδικών κωδικών ενοικίασης
     private static int counter=1;
     //Κωδικός ενοικίασης

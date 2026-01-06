@@ -11,21 +11,36 @@ import java.time.LocalDate;
 
 /**
  * Παράθυρο δημιουργίας ενοικίασης.
- * Ο χρήστης επιλέγει αυτοκίνητο και πελάτη
- * και καταχωρείται νέα ενοικίαση στο σύστημα.
+ * Επιτρέπει:
+ * -προβολή όλων των ενοικιάσεων
+ * -δημιουργία νέας ενοικίασης
+ * -επιλογή διαθέσιμου αυτοκινήτου
+ *
+ * Οι ενοικιάσεις αντλούνται από το RentalService.
  *
  * @author Καραγιώργου Στεργιανή
  * @version 0.1(2026.01.01)
  */
 public class RentalsFrame extends JFrame {
+
+    //Υπηρεσίες & δομές δεδομένων
     private RentalService rentalService;
     private AllCars allCars;
     private AllClients allClients;
     private AuthService authService;
 
+    //Πίνακας εμφάνισης ενοικιάσεων
     private JTable rentalTable;
     private DefaultTableModel tableModel;
 
+    /**
+     * Κατασκευαστής παραθύρου ενοικιάσεων.
+     *
+     * @param rentalService Υπηρεσία ενοικιάσεων
+     * @param allCars Όλα τα αυτοκίνητα
+     * @param allClients Όλοι οι πελάτες
+     * @param authService Υπρεσία αυθεντικοποίησης
+     */
     public RentalsFrame(RentalService rentalService, AllCars allCars, AllClients allClients, AuthService authService) {
         this.rentalService = rentalService;
         this.allCars = allCars;
@@ -37,16 +52,21 @@ public class RentalsFrame extends JFrame {
         setLocationRelativeTo(null);
         setLayout(new BorderLayout(10, 10));
 
-        // 1. Δημιουργία Πίνακα
+        //ΠΙΝΑΚΑΣ ΕΝΙΚΙΑΣΕΩΝ
+
+        // Ορισμός στηλών πίνακα
         String[] columns = {"ID", "Αυτοκίνητο", "Πελάτης", "Από", "Έως", "Κατάσταση"};
+
         tableModel = new DefaultTableModel(columns, 0) {
             @Override
-            public boolean isCellEditable(int row, int column) { return false; }
+            public boolean isCellEditable(int row, int column) {
+                return false; //Απαγόρευση επεξεργασίας
+            }
         };
         rentalTable = new JTable(tableModel);
         add(new JScrollPane(rentalTable), BorderLayout.CENTER);
 
-        // 2. Πάνελ Ελέγχου (Κάτω μέρος)
+        // Πάνελ Ελέγχου
         JPanel controlPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
         // Επιλογή Αυτοκινήτου (Μόνο τα διαθέσιμα)
@@ -57,14 +77,18 @@ public class RentalsFrame extends JFrame {
             }
         }
 
+        //Κουμπί δμιουργίας ενοικίασης
         JButton rentBtn = new JButton("Καταχώρηση Ενοικίασης");
+
         rentBtn.addActionListener(e -> {
+            //Επιλεγμένο αυτοκίνητο
             Car selectedCar = (Car) carBox.getSelectedItem();
             if (selectedCar == null) {
                 JOptionPane.showMessageDialog(this, "Δεν υπάρχουν διαθέσιμα αυτοκίνητα.");
                 return;
             }
 
+            //Εισαγωγή ΑΦΜ πελάτη
             String afm = JOptionPane.showInputDialog(this, "Εισάγετε ΑΦΜ Πελάτη:");
             if (afm == null || afm.trim().isEmpty()) return;
 
@@ -74,7 +98,7 @@ public class RentalsFrame extends JFrame {
                 return;
             }
 
-            // Δημιουργία ενοικίασης (π.χ. για 3 ημέρες από σήμερα)
+            // Δημιουργία ενοικίασης
             try {
                 rentalService.createRental(
                         selectedCar,
@@ -103,6 +127,11 @@ public class RentalsFrame extends JFrame {
         setVisible(true);
     }
 
+    /**
+     * Ανανέωση πίνακα ενοικιάσεων.
+     * Διαβάζει όλες τις ενοικιάσεις από το RentalService
+     * και τις εμφανίζει στο JTable.
+     */
     private void refreshTable() {
         tableModel.setRowCount(0);
         for (Rental r : rentalService.getAllRentals()) {

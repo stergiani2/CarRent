@@ -48,7 +48,6 @@ public class RentalHelper {
                      new ObjectInputStream(new FileInputStream(binaryFile))) {
             return (HashSet<Rental>) ois.readObject();
         } catch (Exception e) {
-            //System.out.println("Πρόβλημα κατά τη φόρτωση των ενοικιάσεων");
             e.printStackTrace();
             return new HashSet<>();
         }

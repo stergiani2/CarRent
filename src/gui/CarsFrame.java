@@ -41,9 +41,8 @@ public class CarsFrame extends JFrame {
         try {
             carHelper.readFromFileCars("vehicles_with_plates.csv");
             refreshTable();
-        }catch (Exception e){
+        }catch (Exception e){}
 
-        }
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setVisible(true);
